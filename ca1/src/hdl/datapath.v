@@ -40,7 +40,7 @@ module datapath(
         .clk(clk),
         .rst(rst),
         .addr(addr_in_ram),
-        .data(data_in_ram)
+        .data_out(data_in_ram)
     )
     assign addr_out_ram = out_cntr_ld[2:0] - 3'b001;
 

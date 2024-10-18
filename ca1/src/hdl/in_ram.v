@@ -5,14 +5,13 @@ module In_RAM #(
     input clk,
     input rst,
     input [ADDR_WIDTH-1:0] addr,
-    input [DATA_WIDTH-1:0] data_in,
     output reg [DATA_WIDTH-1:0] data_out
 );
     
     reg [DATA_WIDTH-1:0] mem [0:(1<<ADDR_WIDTH)-1];
     
     initial begin
-        $readmemh("input.txt", mem);
+        $readmemh("data_input.txt", mem);
     end
     
     always @(posedge clk or posedge rst) begin
