@@ -2,7 +2,8 @@ module controller (
     input wire clk,        
     input wire rst, 
 
-    input wire start,      
+    input wire start,     
+     
     input wire lsb_cnt,       
     input wire en_shift1,       
     input wire en_shift2,       

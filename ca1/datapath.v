@@ -6,6 +6,8 @@ module datapath(
     input wire cntr_ld_en,
     input wire cntr_sh_en,
     input wire cntr_sh_ld,
+    input wire cntr_sh1_en,
+    input wire cntr_sh2_en,
 
     // shift
     input wire en_sh_16bit,
@@ -15,13 +17,16 @@ module datapath(
     // ram
     input wire wr_out_ram,
 
+    output wire lsb_cnt,
+
     output wire co_cnt_sh,
     output wire co_cntr_ld, 
-    output wire lsb_cnt,
-    output wire end_shift1,
-    output wire end_shift2,
     output wire cntr_sh1_init,
     output wire cntr_sh2_init,
+    
+    output wire end_shift1,
+    output wire end_shift2,
+    
 );
 
     // Internal signals
@@ -111,7 +116,7 @@ module datapath(
         .clk(clk),
         .rst(rst),
         .init(cntr_sh1_init),
-        .en(end_shift1),
+        .en(cntr_sh1_en),
         .out(out_cntr_sh1),
         .co(co_cntr_sh1)
     );
@@ -123,7 +128,7 @@ module datapath(
         .clk(clk),
         .rst(rst),
         .init(cntr_sh2_init),
-        .en(end_shift2),
+        .en(cntr_sh2_en),
         .out(out_cntr_sh2),
         .co(co_cntr_sh2)
     );
