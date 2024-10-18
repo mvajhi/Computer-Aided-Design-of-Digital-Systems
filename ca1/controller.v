@@ -3,7 +3,7 @@ module controller (
     input wire rst, 
 
     input wire start,     
-     
+
     input wire lsb_cnt,       
     input wire end_shift1,       
     input wire end_shift2,       
@@ -13,7 +13,7 @@ module controller (
     output reg initial_cnt_sh,
     output reg initial_cnt_sh1,
     output reg initial_cnt_sh2,
-    output reg load_shift_16,
+    output reg en_sh_16bit,
     output reg en_cnt_load,
     output reg en_cnt_sh1,
     output reg en_cnt_sh2,
@@ -103,11 +103,11 @@ module controller (
             end
 
             LOAD1: begin
-                {load_shift_16, en_cnt_load} = 2'b11;
+                {en_sh_16bit, en_cnt_load} = 2'b11;
             end
 
             LOAD2: begin
-                {load_shift_16, en_cnt_load} = 2'b11;
+                {en_sh_16bit, en_cnt_load} = 2'b11;
             end
 
             FIND_BITS: begin

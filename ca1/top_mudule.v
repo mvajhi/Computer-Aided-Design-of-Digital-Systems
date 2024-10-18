@@ -77,7 +77,7 @@ module top_module (
         .initial_cnt_sh(cntr_sh_en),
         .initial_cnt_sh1(cntr_sh1_init),
         .initial_cnt_sh2(cntr_sh2_init),
-        .load_shift_16(en_sh_16bit),
+        .en_sh_16bit(en_sh_16bit),
         .en_cnt_load(cntr_ld_en),
         .en_cnt_sh1(cntr_sh1_en),
         .en_cnt_sh2(cntr_sh2_en),
