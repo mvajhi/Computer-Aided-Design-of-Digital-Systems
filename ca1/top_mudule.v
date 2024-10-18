@@ -20,6 +20,16 @@ module top_module (
     // ram
     wire wr_out_ram;
 
+    wire lsb_cnt;
+
+    wire co_cnt_sh;
+    wire co_cntr_ld; 
+    wire cntr_sh1_init;
+    wire cntr_sh2_init;
+
+    wire end_shift1;
+    wire end_shift2;
+
     datapath dp
     (
         .clk(clk),
