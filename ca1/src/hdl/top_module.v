@@ -75,13 +75,14 @@ module top_module (
         .co_cntr_ld(co_cntr_ld),
 
         .initial_cnt_load(cntr_ld_init),
-        .initial_cnt_sh(cntr_sh_en),
+        .initial_cnt_sh(cntr_sh_ld),
         .initial_cnt_sh1(cntr_sh1_init),
         .initial_cnt_sh2(cntr_sh2_init),
         .en_sh_16bit(en_sh_16bit),
         .en_cnt_load(cntr_ld_en),
         .en_cnt_sh1(cntr_sh1_en),
         .en_cnt_sh2(cntr_sh2_en),
+        .en_cnt_sh(cntr_sh_en),
         .load_result(sh_result_ld),
         .shift_result(sh_result_shift),
         .wr_ram(wr_out_ram)

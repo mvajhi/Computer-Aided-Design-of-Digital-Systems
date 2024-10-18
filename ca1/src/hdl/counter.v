@@ -16,7 +16,7 @@ module Counter #(
             out <= out + 1;
     end
 
-    assign co = &out && en;
+    assign co = &out;
 endmodule
 
 

@@ -1,14 +1,11 @@
-module Out_RAM #(
-    parameter ADDR_WIDTH = 8,
-    parameter DATA_WIDTH = 32
-) (
+module Out_RAM (
     input clk,
     input wr,
-    input [ADDR_WIDTH-1:0] addr,
-    input [DATA_WIDTH-1:0] data_in
+    input [2:0] addr,
+    input [31:0] data_in
 );
     
-    reg [DATA_WIDTH-1:0] mem [0:(1<<ADDR_WIDTH)-1];
+    reg [31:0] mem [7:0];
     
     always @(posedge clk) begin
         if(wr)
