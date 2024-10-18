@@ -91,6 +91,9 @@ module controller (
 
     // Combinational block for output logic
     always @(*) begin
+        {initial_cnt_load,inital_cnt_sh,inital_cnt_sh1,
+        inital_cnt_sh2,en_sh_16bit,en_cnt_load,en_cnt_sh1,
+        en_cnt_sh2,en_cnt_sh,load_result,shift_result,wr_ram,done} = 13'b0;
         case (current_state)
             IDLE: begin
                 {initial_cnt_load,
