@@ -11,7 +11,6 @@ module controller (
     input wire co_cntr_ld,
 
     output reg initial_cnt_load,
-    output reg initial_cnt_sh,
     output reg initial_cnt_sh1,
     output reg initial_cnt_sh2,
     output reg en_sh_16bit,
@@ -91,13 +90,12 @@ module controller (
 
     // Combinational block for output logic
     always @(*) begin
-        {initial_cnt_load,initial_cnt_sh,initial_cnt_sh1,
+        {initial_cnt_load,initial_cnt_sh1,
         initial_cnt_sh2,en_sh_16bit,en_cnt_load,en_cnt_sh1,
         en_cnt_sh2,en_cnt_sh,load_result,shift_result,wr_ram,done, ld_cnt_sh} = 21'b0;
         case (current_state)
             IDLE: begin
                 {initial_cnt_load,
-                initial_cnt_sh,
                 initial_cnt_sh1,
                 initial_cnt_sh2} = 4'b1111;
             end
@@ -114,8 +112,8 @@ module controller (
             end
 
             FIND_BITS: begin
-                {en_cnt_sh1, en_cnt_sh2,
-                 en_cnt_sh, load_result, ld_cnt_sh} = 5'b11111;
+                {en_cnt_sh1, en_cnt_sh2} = {end_shift1, end_shift2};
+                 {en_cnt_sh, load_result, ld_cnt_sh} = 5'b11111;
             end
 
             SHIFT_RES: begin
