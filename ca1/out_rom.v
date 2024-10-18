@@ -9,20 +9,15 @@ module Out_RAM #(
     input [DATA_WIDTH-1:0] data_in,
 );
     
-    reg [DATA_WIDTH-1:0] data_out
     reg [DATA_WIDTH-1:0] mem [0:(1<<ADDR_WIDTH)-1];
     
     always @(posedge clk or posedge rst) begin
         if(rst)
-            data_out <= 0;
+            mem <= 0;
         else if(wr)
-            data_out <= mem[addr];
-    end
-    
-    always @(posedge clk) begin
-        if(wr)
             mem[addr] <= data_in;
     end
     
 endmodule
+
 

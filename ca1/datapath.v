@@ -15,6 +15,7 @@ module datapath(
     // ram
     input wire wr_out_ram,
 
+    output wire co_cnt_sh,
     output wire co_cntr_ld, 
     output wire lsb_cnt,
     output wire end_shift1,
