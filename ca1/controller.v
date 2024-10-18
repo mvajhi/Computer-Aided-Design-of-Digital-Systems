@@ -1,4 +1,4 @@
-module fsm_controller (
+module controller (
     input wire clk,        
     input wire rst, 
 
@@ -7,7 +7,7 @@ module fsm_controller (
     input wire en_shift1,       
     input wire en_shift2,       
     input wire co_cnt_sh,
-    
+
     output reg initial_cnt_load,
     output reg initial_cnt_sh,
     output reg initial_cnt_sh1,
