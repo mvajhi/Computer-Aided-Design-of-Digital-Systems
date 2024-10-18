@@ -1,4 +1,4 @@
-module out #(
+module Counter #(
     parameter WIDTH = 4
 ) (
     input clk,
