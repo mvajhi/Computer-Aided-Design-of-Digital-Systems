@@ -1,23 +1,22 @@
-module Counter #(
+module out #(
     parameter WIDTH = 4
 ) (
     input clk,
     input rst,
     input en,
-    input [WIDTH-1:0] init,
-    output reg [WIDTH-1:0] counter
+    input init,
+    output reg [WIDTH-1:0] out,
+    output co
 );
     
     always @(posedge clk or posedge rst) begin
-        if(rst)
-            counter <= {WIDTH{1'b0}};
+        if(rst || init)
+            out <= {WIDTH{1'b0}};
         else if(en)
-            if(counter == init)
-                counter <= {WIDTH{1'b0}};
-            else
-                counter <= counter + 1'b1;
+            out <= out + 1;
     end
-    
+
+    assign co = &out && en;
 endmodule
 
 
