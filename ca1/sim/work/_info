@@ -10,33 +10,34 @@ z2
 cModel Technology
 Z0 dE:/UT/cad/code/Computer-architecture-design/ca1/sim
 T_opt
-!s110 1729280418
-VDFSgPW;3LSLFg`ebYHb8G2
+!s110 1729282311
+VgaHG`_hMYLJV;>f3Rj46[1
 04 2 4 work tb fast 0
-=1-145afc8c8881-6712b9a2-1a2-3218
+=1-145afc8c8881-6712c107-293-3f58
 o-quiet -auto_acc_if_foreign -work work -debugdb +acc
 Z1 tCvgOpt 0
 n@_opt
 OL;O;2020.4;71
-vcontroller
-!s10a 1729279447
-!s110 1729279461
-!i10b 1
-!s100 A0ZB2Xohd>fXPaBFVjTKF2
-Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
-Iej:e4GOXe6=<RL32Z7Sii3
 R0
-w1729279447
+vcontroller
+!s10a 1729281708
+!s110 1729281714
+!i10b 1
+!s100 eC`lkgT01`j4l5399oidj0
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+ICm<A?M1iKnERXDT>a8<gO1
+R0
+w1729281708
 8../src/hdl/controller.v
 F../src/hdl/controller.v
-!i122 24
+!i122 29
 L0 1 138
 Z3 VDg1SIo80bB@j0V0VzS_@n1
 Z4 OL;L;2020.4;71
 r1
 !s85 0
 31
-!s108 1729279461.000000
+!s108 1729281714.000000
 !s107 ../src/hdl/controller.v|
 !s90 -reportprogress|300|+acc|-incr|-source|+define+SIM|../src/hdl/controller.v|
 !i113 0
@@ -44,6 +45,7 @@ Z5 o+acc -source -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 Z6 !s92 +acc -source +define+SIM -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R1
 vCounter
+!s10a 1729280477
 !s110 1729280416
 !i10b 1
 !s100 6KSX2U0FWIFV]LGY2z8V=3
@@ -95,24 +97,24 @@ R6
 R1
 n@counter_in
 vdatapath
-!s10a 1729279775
-!s110 1729279287
+!s10a 1729282298
+!s110 1729282309
 !i10b 1
-!s100 lCGQ5C<42g:I2@^CXDd<A3
+!s100 Wc5g<A@@6h=f:L<4]66b=0
 R2
-I6c456]=0I?0<hl1elLDC?2
+IgiPh:IKa4lmXdVKL53CDI1
 R0
-w1729279282
+w1729282298
 8../src/hdl/datapath.v
 F../src/hdl/datapath.v
-!i122 23
+!i122 30
 L0 1 151
 R3
 R4
 r1
 !s85 0
 31
-!s108 1729279287.000000
+!s108 1729282309.000000
 !s107 ../src/hdl/datapath.v|
 !s90 -reportprogress|300|+acc|-incr|-source|+define+SIM|../src/hdl/datapath.v|
 !i113 0
@@ -198,24 +200,24 @@ R6
 R1
 n@shift@register
 vtb
-!s10a 1729276424
-!s110 1729276428
+!s10a 1729280705
+!s110 1729280743
 !i10b 1
-!s100 MiLF:AkQDaBVz:3BHm:S^0
+!s100 PRAO6W`mHJdh@ISi_I;4o0
 R2
-IlGXfPl@_=J:]UBSB[Rf[Y0
+II0;aRa9cX=5hd7A5Vn_gF2
 R0
-w1729276424
+w1729280705
 8./tb/tb.v
 F./tb/tb.v
-!i122 9
+!i122 27
 L0 1 23
 R3
 R4
 r1
 !s85 0
 31
-!s108 1729276428.000000
+!s108 1729280743.000000
 !s107 ./tb/tb.v|
 !s90 -reportprogress|300|+acc|-incr|-source|+incdir+../src/inc|+define+SIM|./tb/tb.v|
 !i113 0

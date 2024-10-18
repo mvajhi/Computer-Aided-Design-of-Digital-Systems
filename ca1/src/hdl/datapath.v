@@ -78,12 +78,12 @@ module datapath(
         .rst(rst),
         .load(load_shift2),
         .shift_en(end_shift2),
-        .in(out_shift1),
+        .in(data_in_ram),
         .out(out_shift2)
     );
 
 
-    wire [15:0] shift_result_in = {out_shift1 * out_shift2};
+    wire [15:0] shift_result_in = out_shift1[15:8] * out_shift2[15:8];
     wire [31:0] shift_result_out;
     // shift result
     ShiftRegister #(32) shift_result

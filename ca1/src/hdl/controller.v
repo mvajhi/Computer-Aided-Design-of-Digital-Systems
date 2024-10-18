@@ -68,7 +68,7 @@ module controller (
             end
 
             FIND_BITS: begin
-                next_state = (end_shift1 || end_shift2) ? FIND_BITS : SHIFT_RES;
+                next_state = (end_shift1 || end_shift2) == 1 ? FIND_BITS : SHIFT_RES;
             end
 
             SHIFT_RES: begin

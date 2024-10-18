@@ -10,7 +10,7 @@ module tb ();
         #10 start = 1;
         #10 start = 0;
         
-        #1000 $finish;
+        #3000 $finish;
     end
     always #5 clk = ~clk;
 
