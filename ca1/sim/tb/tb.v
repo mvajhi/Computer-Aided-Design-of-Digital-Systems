@@ -18,6 +18,6 @@ module tb ();
         .clk(clk),
         .rst(rst),  
         .start(start),
-        .done(done),
+        .done(done)
     );
 endmodule

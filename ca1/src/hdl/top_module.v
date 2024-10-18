@@ -72,6 +72,7 @@ module top_module (
         .end_shift1(end_shift1),
         .end_shift2(end_shift2),
         .co_cnt_sh(co_cnt_sh),
+        .co_cntr_ld(co_cntr_ld),
 
         .initial_cnt_load(cntr_ld_init),
         .initial_cnt_sh(cntr_sh_en),

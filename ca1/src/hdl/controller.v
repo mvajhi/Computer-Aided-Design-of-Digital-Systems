@@ -8,6 +8,7 @@ module controller (
     input wire end_shift1,       
     input wire end_shift2,       
     input wire co_cnt_sh,
+    input wire co_cntr_ld,
 
     output reg initial_cnt_load,
     output reg initial_cnt_sh,
@@ -21,22 +22,20 @@ module controller (
     output reg load_result,
     output reg shift_result,
     output reg wr_ram,
-    output reg done,
+    output reg done
 );
 
     // State encoding
-    typedef enum reg [2:0] {
-        IDLE      = 3'b000, 
-        START    = 3'b001, 
-        LOAD1     = 3'b010, 
-        LOAD2     = 3'b011, 
-        FIND_BITS = 3'b100, 
-        SHIFT_RES = 3'b101, 
-        WR        = 3'b110, 
-        DONE        = 3'b111 
-    } state_t;
+    parameter IDLE      = 3'b000; 
+    parameter START    = 3'b001;
+    parameter LOAD1     = 3'b010; 
+    parameter LOAD2     = 3'b011; 
+    parameter FIND_BITS = 3'b100; 
+    parameter SHIFT_RES = 3'b101; 
+    parameter WR        = 3'b110; 
+    parameter DONE        = 3'b111;
 
-    state_t current_state, next_state;
+    reg [2:0] current_state, next_state;
 
     // Sequential block for state transitions
     always @(posedge clk or posedge rst) begin
@@ -68,7 +67,7 @@ module controller (
             end
 
             FIND_BITS: begin
-                next_state = (en_shift1 || en_shift2) ? FIND_BITS : SHIFT_RES;
+                next_state = (end_shift1 || end_shift2) ? FIND_BITS : SHIFT_RES;
             end
 
             SHIFT_RES: begin
@@ -76,7 +75,7 @@ module controller (
             end
 
             WR: begin
-                next_state = co_cnt_load ? DONE : LOAD1; 
+                next_state = co_cntr_ld ? DONE : LOAD1; 
             end
 
             DONE: begin

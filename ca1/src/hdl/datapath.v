@@ -25,8 +25,7 @@ module datapath(
     output wire cntr_sh2_init,
     
     output wire end_shift1,
-    output wire end_shift2,
-    
+    output wire end_shift2
 );
 
     // Internal signals
@@ -35,16 +34,18 @@ module datapath(
 
     wire [3:0] addr_in_ram;
     wire [15:0] data_in_ram;
-    In_RAM #(.ADDR_WIDTH(4),.DATA_WIDTH(16),) in_ram
+    In_RAM #(.ADDR_WIDTH(4),.DATA_WIDTH(16)) in_ram
     (
         .clk(clk),
         .rst(rst),
         .addr(addr_in_ram),
         .data_out(data_in_ram)
-    )
-    assign addr_out_ram = out_cntr_ld[2:0] - 3'b001;
+    );
 
     wire [3:0] out_cntr_ld;
+    
+    assign addr_out_ram = out_cntr_ld[2:0] - 3'b001;
+
     // counter load
     Counter #(.WIDTH(4)) cntr_ld
     (
@@ -100,13 +101,13 @@ module datapath(
     );
     ///////////////////////////////////
 
-    Out_RAM #(.ADDR_WIDTH(3),.DATA_WIDTH(32),) out_ram
+    // out ram
+    Out_RAM #(.ADDR_WIDTH(3),.DATA_WIDTH(32)) out_ram
     (
         .clk(clk),
-        .rst(rst),
         .wr(wr_out_ram),
         .addr(addr_out_ram),
-        .data_in(shift_result_out),
+        .data_in(shift_result_out)
     );
 
     // counters
