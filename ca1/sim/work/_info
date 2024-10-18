@@ -20,6 +20,7 @@ n@_opt
 OL;O;2020.4;71
 R0
 vcontroller
+!s10a 1729288275
 !s110 1729288281
 !i10b 1
 !s100 ?JioQ<z<dm49dne1ZEd0`1
@@ -69,8 +70,34 @@ R6
 R7
 R1
 n@counter
+vCounter4bit
+!s10a 1729289229
+!s110 1729289230
+!i10b 1
+!s100 fS_^n0j=A>zLXlo?P8g<h2
+R2
+IVO0hLFk>8nRQFO9bA8_NO3
+R3
+R4
+w1729289229
+8../src/hdl/counter4bit.v
+F../src/hdl/counter4bit.v
+!i122 56
+Z12 L0 1 25
+R5
+r1
+!s85 0
+31
+!s108 1729289230.000000
+!s107 ../src/hdl/counter4bit.v|
+!s90 -reportprogress|300|+acc|-incr|-source|+define+SIM|../src/hdl/counter4bit.v|
+!i113 1
+R6
+R7
+R1
+n@counter4bit
 vCounter_in
-Z12 !s10a 1729276560
+Z13 !s10a 1729276560
 R9
 !i10b 1
 !s100 ;cd[QhaNKEEiIDl5nH0AI3
@@ -78,11 +105,11 @@ R2
 ICfiOGFT>nPgLaJZ@KTIYn1
 R3
 R4
-Z13 w1729276560
+Z14 w1729276560
 8../src/hdl/counter_in.v
 F../src/hdl/counter_in.v
 !i122 32
-L0 1 25
+R12
 R5
 r1
 !s85 0
@@ -96,24 +123,23 @@ R7
 R1
 n@counter_in
 vdatapath
-!s10a 1729287451
-!s110 1729287686
+!s110 1729289485
 !i10b 1
-!s100 `J`Xb>149jV_9Wdc7>Ga61
+!s100 R3H@JmzWg`HUhKLenOE8Y2
 R2
-ImP<^?GLhR>a7eWGAD4IBG1
+IQaRGB71Z@Z8Wn3zC<UYzB1
 R3
 R4
-w1729287451
+w1729289474
 8../src/hdl/datapath.v
 F../src/hdl/datapath.v
-!i122 51
+!i122 57
 L0 1 154
 R5
 r1
 !s85 0
 31
-!s108 1729287686.000000
+!s108 1729289485.000000
 !s107 ../src/hdl/datapath.v|
 !s90 -reportprogress|300|+acc|-incr|-source|+define+SIM|../src/hdl/datapath.v|
 !i113 1
@@ -133,7 +159,7 @@ R10
 8../src/hdl/in_ram.v
 F../src/hdl/in_ram.v
 !i122 35
-Z14 L0 1 21
+Z15 L0 1 21
 R5
 r1
 !s85 0
@@ -173,7 +199,7 @@ R7
 R1
 n@out_@r@a@m
 vShiftRegister
-R12
+R13
 R9
 !i10b 1
 !s100 z:1MUGTWlSdiBnYRUW?nP1
@@ -181,11 +207,11 @@ R2
 I9JX6gVNO@JCFOh4>ZFLd72
 R3
 R4
-R13
+R14
 8../src/hdl/shiftreg.v
 F../src/hdl/shiftreg.v
 !i122 37
-R14
+R15
 R5
 r1
 !s85 0

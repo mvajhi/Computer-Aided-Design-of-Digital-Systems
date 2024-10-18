@@ -43,10 +43,10 @@ module datapath(
 
     wire [3:0] out_cntr_ld;
     
-    wire [2:0] addr_out_ram = out_cntr_ld[2:0] - 3'b001;
+    wire [2:0] addr_out_ram = out_cntr_ld[3:1] - 3'b001;
 
     // counter load
-    Counter #(.WIDTH(4)) cntr_ld
+    Counter4bit cntr_ld
     (
         .clk(clk),
         .rst(rst),
