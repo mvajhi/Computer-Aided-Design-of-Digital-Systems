@@ -35,6 +35,7 @@ module top_module (
         .clk(clk),
         .rst(rst),
 
+        // input
         .cntr_ld_init(cntr_ld_init),
         .cntr_ld_en(cntr_ld_en),
         .cntr_sh_en(cntr_sh_en),
@@ -47,6 +48,17 @@ module top_module (
         .sh_result_shift(sh_result_shift),
 
         .wr_out_ram(wr_out_ram),
+
+        // output
+        .lsb_cnt(lsb_cnt),
+
+        .co_cnt_sh(co_cnt_sh),
+        .co_cntr_ld(co_cntr_ld), 
+        .cntr_sh1_init(cntr_sh1_init),
+        .cntr_sh2_init(cntr_sh2_init),
+
+        .end_shift1(end_shift1),
+        .end_shift2(end_shift2) 
     );
 
     controller ctrl
@@ -54,7 +66,24 @@ module top_module (
         .clk(clk),
         .rst(rst),
         .start(start),
-        .done(done)
+        .done(done),
+
+        .lsb_cnt(lsb_cnt),
+        .end_shift1(end_shift1),
+        .end_shift2(end_shift2),
+        .co_cnt_sh(co_cnt_sh),
+
+        .initial_cnt_load(cntr_ld_init),
+        .initial_cnt_sh(cntr_sh_en),
+        .initial_cnt_sh1(cntr_sh1_init),
+        .initial_cnt_sh2(cntr_sh2_init),
+        .load_shift_16(en_sh_16bit),
+        .en_cnt_load(cntr_ld_en),
+        .en_cnt_sh1(cntr_sh1_en),
+        .en_cnt_sh2(cntr_sh2_en),
+        .load_result(sh_result_ld),
+        .shift_result(sh_result_shift),
+        .wr_ram(wr_out_ram)
     );
 
 endmodule
