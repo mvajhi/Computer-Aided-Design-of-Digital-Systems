@@ -9,6 +9,7 @@ module instant_buffer #(
     input wire [$clog2(READ_SIZE)-1:0] read_addr,       
     input wire clk,
     input wire rst,
+    input wire write_en,
 
     output wire [DATA_WIDTH-1:0] out [0:READ_SIZE-1]
 );
@@ -22,6 +23,7 @@ module instant_buffer #(
     )
     dec (
        .in(write_addr),
+       .en(write_en),
        .out(write_addr_dec) 
     )
 
