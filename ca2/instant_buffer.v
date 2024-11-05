@@ -1,0 +1,73 @@
+module instant_buffer #(
+    parameter SIZE = 8,
+    parameter WRITE_SIZE = 2,
+    parameter READ_SIZE = 2,
+    parameter DATA_WIDTH = 8, 
+) (
+    input wire [DATA_WIDTH-1:0] in [0:WRITE_SIZE-1],
+    input wire [$clog2(WRITE_SIZE)-1:0] write_addr,
+    input wire [$clog2(READ_SIZE)-1:0] read_addr,       
+    input wire clk,
+    input wire rst,
+
+    output wire [DATA_WIDTH-1:0] out [0:READ_SIZE-1]
+);
+    localparam SEL_WIDTH = $clog2(SIZE);
+
+    // decoder
+    wire [WRITE_SIZE-1:0] write_addr_dec;
+    decoder #(
+        .SIZE(SIZE),
+        .WRITE_SIZE(WRITE_SIZE)
+    )
+    dec (
+       .in(write_addr),
+       .out(write_addr_dec) 
+    )
+
+
+    wire [DATA_WIDTH-1:0] reg_out [0:SIZE-1];
+    generate
+        genvar i;
+        // instant_write
+        for (i = 0; i < SIZE; i = i + 1) begin
+            
+            wire [SEL_WIDTH-1:0] mux_select;
+            assign mux_select = ({1'b1, i} - write_addr)[SEL_WIDTH-1:0];
+
+            wire [DATA_WIDTH-1:0] mux_out;
+            multiplexer #(
+                .SIZE(SIZE),
+                .DATA_WIDTH(DATA_WIDTH)
+            )
+            mux (
+                .in(in),
+                .select(mux_select),
+                .out(mux_out)
+            )
+
+            register #(
+                .DATA_WIDTH(DATA_WIDTH)
+            )
+            reg (
+                .clk(clk),
+                .rst(rst),
+                .ld(write_addr_dec[i]),
+                .in(mux_out),
+                .out(reg_out[i])    
+            )
+        end
+
+        for (i = 0; i < READ_SIZE; i = i + 1) begin
+            multiplexer #(
+                .SIZE(SIZE),
+                .DATA_WIDTH(DATA_WIDTH)
+            )
+            mux (
+                .in(out),
+                .select(read_addr + i),
+                .out(out[i])
+            )
+        end
+    endgenerate
+endmodule
