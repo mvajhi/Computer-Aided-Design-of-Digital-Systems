@@ -16,6 +16,7 @@
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/controller.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter_in.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter4bit.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/datapath.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/in_ram.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/out_ram.v

@@ -13,7 +13,8 @@ module top_module (
     wire cntr_sh2_en;
 
     // shift
-    wire en_sh_16bit;
+    wire load_shift1;
+    wire load_shift2;
     wire sh_result_ld;
     wire sh_result_shift;
 
@@ -30,6 +31,9 @@ module top_module (
     wire end_shift1;
     wire end_shift2;
 
+    wire en_shift1;
+    wire en_shift2;
+
     datapath dp
     (
         .clk(clk),
@@ -43,7 +47,10 @@ module top_module (
         .cntr_sh1_en(cntr_sh1_en),
         .cntr_sh2_en(cntr_sh2_en),
 
-        .en_sh_16bit(en_sh_16bit),
+        .load_shift1(load_shift1),
+        .load_shift2(load_shift2),
+        .en_shift1(en_shift1),
+        .en_shift2(en_shift2),
         .sh_result_ld(sh_result_ld),
         .sh_result_shift(sh_result_shift),
 
@@ -75,10 +82,13 @@ module top_module (
         .co_cntr_ld(co_cntr_ld),
 
         .initial_cnt_load(cntr_ld_init),
-        .initial_cnt_sh(cntr_sh_ld),
+        .ld_cnt_sh(cntr_sh_ld),
         .initial_cnt_sh1(cntr_sh1_init),
         .initial_cnt_sh2(cntr_sh2_init),
-        .en_sh_16bit(en_sh_16bit),
+        .load_shift1(load_shift1),
+        .load_shift2(load_shift2),
+        .en_shift1(en_shift1),
+        .en_shift2(en_shift2),
         .en_cnt_load(cntr_ld_en),
         .en_cnt_sh1(cntr_sh1_en),
         .en_cnt_sh2(cntr_sh2_en),

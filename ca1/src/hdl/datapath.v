@@ -10,7 +10,10 @@ module datapath(
     input wire cntr_sh2_en,
 
     // shift
-    input wire en_sh_16bit,
+    input wire load_shift1,
+    input wire load_shift2,
+    input wire en_shift1,
+    input wire en_shift2,
     input wire sh_result_ld,
     input wire sh_result_shift,
 
@@ -40,10 +43,10 @@ module datapath(
 
     wire [3:0] out_cntr_ld;
     
-    wire [2:0] addr_out_ram = out_cntr_ld[2:0] - 3'b001;
+    wire [2:0] addr_out_ram = out_cntr_ld[3:1] - 3'b001;
 
     // counter load
-    Counter #(.WIDTH(4)) cntr_ld
+    Counter4bit cntr_ld
     (
         .clk(clk),
         .rst(rst),
@@ -56,8 +59,8 @@ module datapath(
     assign addr_in_ram = out_cntr_ld;
 
     ///////////////////////////////////////
-    wire load_shift1 = out_cntr_ld[0] && en_sh_16bit;
-    wire load_shift2 = ~out_cntr_ld[0] && en_sh_16bit;
+    // wire load_shift1 = out_cntr_ld[0] && en_sh_16bit;
+    // wire load_shift2 = ~out_cntr_ld[0] && en_sh_16bit;
     wire [15:0] out_shift1;
     // shift 1
     ShiftRegister #(16) shift1
@@ -65,7 +68,7 @@ module datapath(
         .clk(clk),
         .rst(rst),
         .load(load_shift1),
-        .shift_en(end_shift1),
+        .shift_en(en_shift1),
         .in(data_in_ram),
         .out(out_shift1)
     );
@@ -77,7 +80,7 @@ module datapath(
         .clk(clk),
         .rst(rst),
         .load(load_shift2),
-        .shift_en(end_shift2),
+        .shift_en(en_shift2),
         .in(data_in_ram),
         .out(out_shift2)
     );
