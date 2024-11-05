@@ -10,8 +10,8 @@ module handshake_controller (
     parameter ACCEPTING = 2'b01;
     parameter PROCESSING = 2'b10;
 
-    reg current_state[1:0];
-    reg next_state[1:0];
+    reg [1:0] current_state;
+    reg [1:0] next_state;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
