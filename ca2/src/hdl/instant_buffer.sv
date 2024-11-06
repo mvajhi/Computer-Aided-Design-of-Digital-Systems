@@ -15,6 +15,7 @@ module instant_buffer #(
 );
     localparam SEL_WIDTH = $clog2(SIZE);
     localparam WRITE_SEL_WIDTH = $clog2(WRITE_SIZE);
+    localparam READ_SEL_WIDTH = $clog2(READ_SIZE);
 
     // decoder
     wire [SIZE-1:0] write_addr_dec;
@@ -36,7 +37,7 @@ module instant_buffer #(
         for (i = 0; i < SIZE; i = i + 1) begin
             
 
-            wire [SEL_WIDTH-1:0] mux_select;
+            wire [WRITE_SEL_WIDTH-1:0] mux_select;
             wire [SEL_WIDTH:0] temp_result;
             assign temp_result = {1'b1, i} - write_addr;
             assign mux_select = temp_result[WRITE_SEL_WIDTH-1:0];
@@ -70,7 +71,7 @@ module instant_buffer #(
                 .DATA_WIDTH(DATA_WIDTH)
             )
             mux (
-                .in(out),
+                .in(reg_out),
                 .select(read_addr + i),
                 .out(out[i])
             );
