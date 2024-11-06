@@ -1,10 +1,10 @@
 module datapath #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PAR_WRITE = 1, parameter PAR_READ = 1) (
     input wire clk,
     input wire rst,
-    input wire [DATA_WIDTH-1:0] data_in [PAR_WRITE-1:0],
+    input wire [DATA_WIDTH-1:0] data_in [0:PAR_WRITE-1],
     input wire write_enable,
     input wire read_enable,
-    output reg [DATA_WIDTH-1:0] data_out [PAR_READ-1:0],
+    output reg [DATA_WIDTH-1:0] data_out [0:PAR_READ-1],
     output wire full,
     output wire empty
 );

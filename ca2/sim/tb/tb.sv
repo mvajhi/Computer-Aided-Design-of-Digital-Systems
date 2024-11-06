@@ -3,7 +3,7 @@ module tb ();
     reg rst = 0;
     reg [7:0] data_in [3:0];
     reg write_enable = 0;
-    reg read_enable = 0;
+    reg read_enable = 4'b0100;
     wire [7:0] data_out [3:0];
     wire full;
     wire empty;
