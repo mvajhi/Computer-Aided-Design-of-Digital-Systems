@@ -57,7 +57,7 @@ module datapath #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PAR_W
         .read_addr(r_address),
         .clk(clk),
         .rst(rst),
-        // TODO add write enable
+        .write_en(write_enable),
         .out(data_out)
     );
 
