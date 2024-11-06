@@ -12,9 +12,9 @@ module datapath #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PAR_W
 
     wire [SEL_WIDTH-1:0] w_address;
     wire [SEL_WIDTH-1:0] r_address;
-    wire [SEL_WIDTH-1:0] len;
+    wire [SEL_WIDTH:0] len;
 
-    up_down_counter #(.WIDTH(SEL_WIDTH), .UP_STEP(PAR_WRITE), .DOWN_STEP(PAR_READ)) len_counter (
+    up_down_counter #(.WIDTH(SEL_WIDTH + 1), .UP_STEP(PAR_WRITE), .DOWN_STEP(PAR_READ)) len_counter (
         .clk(clk),
         .rst(rst),
         .up_enable(write_enable),
@@ -36,15 +36,15 @@ module datapath #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PAR_W
         .count(r_address)
     );
 
-    wire [$clog2(SIZE)-1:0] len_add;
-    wire len_add_co;
+    // wire [SEL_WIDTH:0] len_add;
+    // wire len_add_co;
 
-    assign {len_add_co, len_add} = len + PAR_WRITE;
-    assign full = len_add_co;
+    // assign {len_add_co, len_add} = len + PAR_WRITE - 1;
+    assign full = len + PAR_WRITE > DATA_WIDTH;
 
-    wire [$clog2(SIZE):0] len_sub;
-    assign len_sub = {0, len} - (PAR_READ + 1);
-    assign empty = len_sub[$clog2(SIZE)];
+    // wire [$clog2(SIZE):0] len_sub;
+    // assign len_sub = {0, len} - (PAR_READ + 1);
+    assign empty = {{0,len} - PAR_READ}[SEL_WIDTH+1];
 
     instant_buffer #(
         .SIZE(SIZE),

@@ -21,7 +21,11 @@ module tb ();
         
         #10 write_enable = 1;
         #10 write_enable = 0;
+        #30 write_enable = 1;
+        #10 write_enable = 0;
         #10 read_enable = 1;
+        #10 read_enable = 0;
+        #30 read_enable = 1;
         #10 read_enable = 0;
         
         #1000 $finish;
