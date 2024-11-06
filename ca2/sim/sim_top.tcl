@@ -14,15 +14,15 @@
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
 	# vlog 	+acc -incr -source  +define+SIM 	$inc_path/implementation_option.vh
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/datapath.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/decoder.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/fifo.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/handshake_controller.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/instant_buffer.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mux.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/register.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/up_down_counter.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/datapath.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/decoder.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/fifo.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/handshake_controller.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/instant_buffer.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mux.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/register.sv
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/up_down_counter.sv
 		
 	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.v
 	onerror {break}
