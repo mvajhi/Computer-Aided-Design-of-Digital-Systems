@@ -72,7 +72,7 @@ module instant_buffer #(
             )
             mux (
                 .in(reg_out),
-                .select(read_addr + i),
+                .select(read_addr + i[SEL_WIDTH-1:0]),
                 .out(out[i])
             );
         end
