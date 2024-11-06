@@ -14,6 +14,15 @@
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
 	# vlog 	+acc -incr -source  +define+SIM 	$inc_path/implementation_option.vh
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/counter.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/datapath.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/decoder.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/fifo.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/handshake_controller.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/instant_buffer.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/mux.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/register.v
+	vlog 	+acc -incr -source  +define+SIM 	$inc_path/up_down_counter.v
 		
 	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.v
 	onerror {break}
