@@ -1,9 +1,9 @@
 module tb ();
     reg clk = 0;
     reg rst = 0;
-    wire [7:0] data_in [3:0]= 0;
-    wire write_enable = 0;
-    wire read_enable = 0;
+    reg [7:0] data_in [3:0];
+    reg write_enable = 0;
+    reg read_enable = 0;
     wire [7:0] data_out [3:0];
     wire full;
     wire empty;
@@ -45,6 +45,6 @@ module tb ();
         .empty(empty),
         .valid(valid),
         .ready(ready)
-    )
+    );
 
 endmodule

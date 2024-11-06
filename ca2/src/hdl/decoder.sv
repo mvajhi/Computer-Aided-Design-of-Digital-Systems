@@ -12,11 +12,10 @@ module decoder #(
 
         out = {SIZE{1'b0}};
         if (en)
-        {
+        begin
             for (i = 0; i < WRITE_SIZE; i = i + 1) begin
-                if (in + i < SIZE)
-                    out[in + i] = 1'b1;
+                out[(in + i) % SIZE] = 1'b1;
             end
-        }
+        end
     end
 endmodule
