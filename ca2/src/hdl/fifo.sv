@@ -30,7 +30,7 @@ module fifo_buffer #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PA
     handshake_controller handshake_writer (
         .clk(clk),
         .rst(rst),
-        .enable(write_enable),
+        .request(write_enable),
         .accept(accept_writer),
         .done(done_writer)
     );
@@ -38,7 +38,7 @@ module fifo_buffer #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PA
     handshake_controller handshake_reader (
         .clk(clk),
         .rst(rst),
-        .enable(read_enable),
+        .request(read_enable),
         .accept(accept_reader),
         .done(done_reader)
     );

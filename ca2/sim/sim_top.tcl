@@ -24,7 +24,7 @@
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/register.sv
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/up_down_counter.sv
 		
-	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.v
+	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.sv
 	onerror {break}
 
 #================================ simulation ====================================

@@ -2,7 +2,7 @@ module decoder #(
     parameter SIZE = 8,
     parameter WRITE_SIZE = 2
 ) (
-    input wire [SIZE-1:0] in,
+    input wire [$clog2(SIZE)-1:0] in,
     input wire en,
     output reg  [SIZE-1:0] out
 );
