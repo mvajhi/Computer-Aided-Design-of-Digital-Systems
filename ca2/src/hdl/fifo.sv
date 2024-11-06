@@ -31,7 +31,7 @@ module fifo_buffer #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PA
         .clk(clk),
         .rst(rst),
         .request(write_enable),
-        .accept(accept_writer),
+        .accept(ready),
         .done(done_writer)
     );
 
@@ -39,7 +39,7 @@ module fifo_buffer #(parameter DATA_WIDTH = 8, parameter SIZE = 16, parameter PA
         .clk(clk),
         .rst(rst),
         .request(read_enable),
-        .accept(accept_reader),
+        .accept(valid),
         .done(done_reader)
     );
 
