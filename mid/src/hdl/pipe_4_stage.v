@@ -1,12 +1,12 @@
 module pipe_4_stage #(
     parameter RAM_VALUE_0_STAGE1 = 32'h7FFFFFFF,
-    parameter RAM_VALUE_1_STAGE1 = 32'h0,
+    parameter RAM_VALUE_1_STAGE1 = 32'h19999999,
     parameter RAM_VALUE_0_STAGE2 = 32'hC0000000,
-    parameter RAM_VALUE_1_STAGE2 = 32'h0,
+    parameter RAM_VALUE_1_STAGE2 = 32'hF5555555,
     parameter RAM_VALUE_0_STAGE3 = 32'h2AAAAAAA,
-    parameter RAM_VALUE_1_STAGE3 = 32'b0,
+    parameter RAM_VALUE_1_STAGE3 = 32'h12492800,
     parameter RAM_VALUE_0_STAGE4 = 32'hE0000000,
-    parameter RAM_VALUE_1_STAGE4 = 32'b0
+    parameter RAM_VALUE_1_STAGE4 = 32'hF0000000
 ) (
     input         clk,
     input         rst,
