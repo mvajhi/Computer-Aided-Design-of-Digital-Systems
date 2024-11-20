@@ -1,8 +1,9 @@
-module controller (
+module controller #(parameter N = 3'b111) (
     input        clk,
     input        rst,
     input        start,
     input        in_valid,
+    input        flag,
     output       ready,
     output       out_valid,
     output       error,
@@ -13,6 +14,8 @@ module controller (
 );
     parameter IDLE = 1'b0;
     parameter COMPUTE = 1'b1;
+
+    wire big_N = N > 3'd3;
 
     reg state, next_state;
 
@@ -37,21 +40,23 @@ module controller (
     end
 
     always @(*) begin
-        {ready, out_valid, error, sel_x, sel_num, sel_sum, sel_i} = 7'b0000000;
+        {ready, error, out_valid} = 3'b000;
         case (state)
             IDLE: begin
                 ready = 1'b1;
                 out_valid = start;
             end
             COMPUTE: begin
-                ready = in_valid || N <= 3'd4;
-                out_valid = ready;
-                sel_x = !ready;
-                sel_num = !ready;
-                sel_sum = !ready;
-                sel_i = !ready;
+                ready = in_valid || !big_N;
+                out_valid = ready || flag;
             end
         endcase
     end
+
+    assign flag = ready && big_N;
+    assign sel_x = !ready;
+    assign sel_num = !ready;
+    assign sel_sum = !ready;
+    assign sel_i = !ready;
 
 endmodule

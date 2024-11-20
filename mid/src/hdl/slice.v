@@ -1,17 +1,19 @@
 module pipe_slice_dp #(
     parameter RAM_VALUE_0 = 32'b0,
-    parameter RAM_VALUE_1 = 32'b0
+    parameter RAM_VALUE_1 = 32'b0,
+    parameter N = 3'b111
 ) (
     input signed  [31:0] in_x,
     input signed  [31:0] in_num,
     input signed  [31:0] in_sum,
     input         addr,
-    input         sel_sum,
     input         in_overflow,
+    input  [2:0]  in_i,
     output signed [31:0] out_sum,
     output signed [31:0] out_num,
     output signed [31:0] out_x,
-    output        out_overflow
+    output        out_overflow,
+    output [2:0]  out_i
 );
 
     wire signed [31:0] term;
@@ -20,6 +22,7 @@ module pipe_slice_dp #(
     wire signed [63:0] mult1;
     wire signed [63:0] mult2;
     wire        overflow_flag;
+    wire         sel_sum;
 
     assign out_x = in_x;
 
@@ -47,5 +50,8 @@ module pipe_slice_dp #(
         .data_out(coefficient)
     );
 
+    assign out_i = in_i + 1'b1;
+    assign addr = in_i[2];
+    assign sel_sum = in_i > N;
 
 endmodule
