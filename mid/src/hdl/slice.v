@@ -6,7 +6,6 @@ module pipe_slice_dp #(
     input signed  [31:0] in_x,
     input signed  [31:0] in_num,
     input signed  [31:0] in_sum,
-    input         addr,
     input         in_overflow,
     input  [2:0]  in_i,
     output signed [31:0] out_sum,
@@ -23,6 +22,7 @@ module pipe_slice_dp #(
     wire signed [63:0] mult2;
     wire        overflow_flag;
     wire         sel_sum;
+    wire         addr;
 
     assign out_x = in_x;
 
