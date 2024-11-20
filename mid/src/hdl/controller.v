@@ -8,7 +8,8 @@ module controller (
     output       error,
     output       sel_x,
     output       sel_num,
-    output       sel_sum
+    output       sel_sum,
+    output       sel_i
 );
     parameter IDLE = 1'b0;
     parameter COMPUTE = 1'b1;
@@ -36,7 +37,7 @@ module controller (
     end
 
     always @(*) begin
-        {ready, out_valid, error, sel_x, sel_num, sel_sum} = 6'b000000;
+        {ready, out_valid, error, sel_x, sel_num, sel_sum, sel_i} = 7'b0000000;
         case (state)
             IDLE: begin
                 ready = 1'b1;
