@@ -7,10 +7,11 @@ module pipe_slice_dp #(
     input signed  [31:0] in_sum,
     input         addr,
     input         sel_sum,
+    input         in_overflow,
     output signed [31:0] out_sum,
     output signed [31:0] out_num,
     output signed [31:0] out_x,
-    output        overflow_flag
+    output        out_overflow
 );
 
     wire signed [31:0] term;
@@ -18,6 +19,7 @@ module pipe_slice_dp #(
     wire signed [31:0] coefficient;
     wire signed [63:0] mult1;
     wire signed [63:0] mult2;
+    wire        overflow_flag;
 
     assign out_x = in_x;
 
@@ -33,6 +35,7 @@ module pipe_slice_dp #(
         .sum(add),
         .overflow(overflow_flag)
     );
+    assign out_overflow = in_overflow | overflow_flag;
 
     assign out_sum = sel_sum ? in_sum : add;
 
