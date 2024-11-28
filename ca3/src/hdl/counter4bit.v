@@ -7,7 +7,7 @@ module Counter4bit (
     output reg co
 );
     
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if(rst || init)
         begin
             out <= 4'b0;
