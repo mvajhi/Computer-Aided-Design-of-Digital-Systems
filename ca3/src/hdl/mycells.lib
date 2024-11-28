@@ -1,0 +1,163 @@
+library(demo) {
+    cell (C1) {
+        area : 1.0;
+
+        pin (A0) {
+            direction : input;
+        }
+        pin (A1) {
+            direction : input;
+        }
+        pin (SA) {
+            direction : input;
+        }
+        pin (B0) {
+            direction : input;
+        }
+        pin (B1) {
+            direction : input;
+        }
+        pin (SB) {
+            direction : input;
+        }
+        pin (S0) {
+            direction : input;
+        }
+        pin (S1) {
+            direction : input;
+        }
+        pin (F) {
+            direction : output;
+            function : "( (S1 & S0) ? (SB ? B1 : B0) : (SA ? A1 : A0) )";
+        }
+    }
+
+    cell (C2) {
+        area : 1.0;
+
+        pin (A0) {
+            direction : input;
+        }
+        pin (B0) {
+            direction : input;
+        }
+        pin (A1) {
+            direction : input;
+        }
+        pin (B1) {
+            direction : input;
+        }
+        pin (D[0]) {
+            direction : input;
+        }
+        pin (D[1]) {
+            direction : input;
+        }
+        pin (D[2]) {
+            direction : input;
+        }
+        pin (D[3]) {
+            direction : input;
+        }
+        pin (out) {
+            direction : output;
+            function : "D[{ (A1 | B1), (A0 & B0) }]";
+        }
+    }
+
+    cell (S1) {
+        area : 1.0;
+
+        pin (A0) {
+            direction : input;
+        }
+        pin (B0) {
+            direction : input;
+        }
+        pin (A1) {
+            direction : input;
+        }
+        pin (B1) {
+            direction : input;
+        }
+        pin (D[0]) {
+            direction : input;
+        }
+        pin (D[1]) {
+            direction : input;
+        }
+        pin (D[2]) {
+            direction : input;
+        }
+        pin (D[3]) {
+            direction : input;
+        }
+        pin (CLK) {
+            direction : input;
+            clock : true;
+        }
+        pin (CLR) {
+            direction : input;
+            clear : true;
+        }
+        pin (out) {
+            direction : output;
+            function : "q";
+        }
+
+        ff (q, CLK) {
+            next_state : "D[{ (A1 | B1), (A0 & B0) }]";
+            clear : CLR;
+            clear_preset_var1 : "1'b0";
+            clocked_on : "posedge";
+        }
+    }
+
+    cell (S2) {
+        area : 1.0;
+
+        pin (A0) {
+            direction : input;
+        }
+        pin (B0) {
+            direction : input;
+        }
+        pin (A1) {
+            direction : input;
+        }
+        pin (B1) {
+            direction : input;
+        }
+        pin (D[0]) {
+            direction : input;
+        }
+        pin (D[1]) {
+            direction : input;
+        }
+        pin (D[2]) {
+            direction : input;
+        }
+        pin (D[3]) {
+            direction : input;
+        }
+        pin (CLK) {
+            direction : input;
+            clock : true;
+        }
+        pin (CLR) {
+            direction : input;
+            clear : true;
+        }
+        pin (out) {
+            direction : output;
+            function : "q";
+        }
+
+        ff (q, CLK) {
+            next_state : "D[{ (A1 | B1), (A0 & B0) }]";
+            clear : CLR;
+            clear_preset_var1 : "1'b0";
+            clocked_on : "posedge";
+        }
+    }
+}
