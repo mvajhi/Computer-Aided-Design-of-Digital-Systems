@@ -1,38 +1,49 @@
-#include <windows.h>
-#include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <bits/stdc++.h>
-LPWSTR stringToLPWSTR(const std::string& str) {
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
-    LPWSTR wstr = new WCHAR[size_needed];
-    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wstr, size_needed);
-    return wstr;
-}
-int main(int argc, const char * argv[]) {
-    
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/file.h>
 
-    HANDLE mutex = CreateMutexW(NULL, false, stringToLPWSTR("Hatef"));
-    DWORD waitResult = WaitForSingleObject(mutex, INFINITE);
-    if (waitResult == WAIT_OBJECT_0)
-    {
-        std::ifstream f("da.txt");
-
-    // Check if the file is successfully opened
-    if (!f.is_open()) {
+int main() {
+    // فایل را باز کرده و قفل ایجاد می‌کنیم
+    int fd = open("da.txt", O_RDWR | O_CREAT, 0666);
+    if (fd == -1) {
         std::cerr << "Error opening the file!";
         return 1;
     }
 
-    // String variable to store the read data
+    // قفل اختصاصی روی فایل
+    if (flock(fd, LOCK_EX) == -1) {
+        std::cerr << "Error locking the file!";
+        close(fd);
+        return 1;
+    }
+
+    // خواندن داده از فایل
+    std::ifstream f("da.txt");
+    if (!f.is_open()) {
+        std::cerr << "Error opening the file!";
+        flock(fd, LOCK_UN); // آزادسازی قفل
+        close(fd);
+        return 1;
+    }
+
     std::string s;
     getline(f, s);
-    int number = std::stoi(s);
-    number+=10;
-    std::ofstream MyFile("da.txt",std::ios::trunc);
-    MyFile<<number;
     f.close();
-    ReleaseMutex(mutex);
 
-    }
+    // پردازش داده
+    int number = std::stoi(s);
+    number += 10;
+
+    // نوشتن داده در فایل
+    std::ofstream MyFile("da.txt", std::ios::trunc);
+    MyFile << number;
+    MyFile.close();
+
+    // آزادسازی قفل و بستن فایل
+    flock(fd, LOCK_UN);
+    close(fd);
+
+    return 0;
 }
