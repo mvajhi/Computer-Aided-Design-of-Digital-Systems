@@ -43,17 +43,43 @@ module bit_multiplier
     assign xo = xi;
     assign yo = yi;
 
-    and_gate and_inst (
+    and_mod and_inst (
         .a(xi),
         .b(yi),
         .y(xy)
     );
-    assign co = (pi & xy) | (pi & ci) | (xy & ci);
-    assign po = pi ^ ci ^ xy;
+
+    C1 co_gen (
+        .A0(1'b0),
+        .A1(ci),
+        .SA(xy),
+        .B0(ci),
+        .B1(1'b1),
+        .SB(xy),
+        .S0(pi),
+        .S1(pi),
+        .F(co)
+    );
+
+    wire inv_co;
+    not_mod not_co
+    (
+        .in(co),
+        .out(inv_co)
+    );
+
+    C2 po_gen (
+        .A0(pi),
+        .B0(ci),
+        .A1(xy),
+        .B1(xy),
+        .D({1'b1, inv_co, inv_co, 1'b0}),
+        .out(po)
+    );
 
 endmodule
 
-module and_gate
+module and_mod
 (
     input a, b,
     output y
