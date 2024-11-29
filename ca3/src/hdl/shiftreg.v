@@ -5,12 +5,12 @@ module ShiftRegister #(
     input rst,
     input load,
     input shift_en,
-    input [15:0] in,
+    input [WIDTH - 1:0] in,
     input in_sh,
-    output [15:0] out
+    output [WIDTH - 1:0] out
 );
 
-wire [15:0] data;
+wire [WIDTH - 1:0] data;
 genvar i;
 
 generate
@@ -23,7 +23,7 @@ generate
             .B0(shift_en),
             .A1(load),
             .B1(load),
-            .D({in[i], in[i], data[i-1], data[i]}),
+            .D({in[i], in[i], (i == 0) ? in_sh : data[i-1], data[i]}),
             .CLK(clk),
             .CLR(rst),
             .out(data[i])
