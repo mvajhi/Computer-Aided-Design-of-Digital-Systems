@@ -172,7 +172,7 @@ module datapath(
     //     .B(sh2_out[15]),
     //     .out(end_shift2)
     // );
-
+// TODO
     assign end_shift1 = ~cntr_3bit_co & ~sh1_out[15];
     assign end_shift2 = ~cntr_3bit_co & ~sh2_out[15];
 
