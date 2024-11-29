@@ -162,19 +162,16 @@ module datapath(
 
 
     // logic
-    // nor_mod nor_inst1 (
-    //     .A(cntr_3bit_co),
-    //     .B(sh1_out[15]),
-    //     .out(end_shift1)
-    // );
-    // nor_mod nor_inst2 (
-    //     .A(cntr_3bit_co),
-    //     .B(sh2_out[15]),
-    //     .out(end_shift2)
-    // );
-// TODO
-    assign end_shift1 = ~cntr_3bit_co & ~sh1_out[15];
-    assign end_shift2 = ~cntr_3bit_co & ~sh2_out[15];
+    nor_mod nor_inst1 (
+        .A(cntr_3bit_co),
+        .B(sh1_out[15]),
+        .out(end_shift1)
+    );
+    nor_mod nor_inst2 (
+        .A(cntr_3bit_co),
+        .B(sh2_out[15]),
+        .out(end_shift2)
+    );
 
     // multiplier
     multiplier #(
