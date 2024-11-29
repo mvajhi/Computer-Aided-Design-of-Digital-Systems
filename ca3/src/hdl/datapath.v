@@ -106,8 +106,34 @@ module datapath(
 
     // counter dual
     wire cntr_dual_en1, cntr_dual_en2;
-    assign cntr_dual_en1 = (end_shift1 & end_shift2) & cntr_dual_en;
-    assign cntr_dual_en2 = ~(end_shift1 ^ end_shift2) & cntr_dual_en;
+
+    // wire cntr_dual_en1_ = (end_shift1 & end_shift2) & cntr_dual_en;
+    // wire cntr_dual_en2_ = ~(end_shift1 ^ end_shift2) & cntr_dual_en;
+
+    C2 c2_inst_en1 (
+        .A1(cntr_dual_en), .B1(cntr_dual_en),
+        .A0(en_shift1), .B0(en_shift2),
+        .D(4'b1000),
+        .out(cntr_dual_en1)
+    );
+
+    wire xor_inst_en2_out;
+    xor_mod xor_inst_en2 (
+        .A(end_shift1),
+        .B(end_shift2),
+        .out(xor_inst_en2_out)
+    );
+
+    C1 c1_inst_en2 (
+        .A0(cntr_dual_en),
+        .A1(1'b0),
+        .SA(xor_inst_en2_out),
+        .B0(1'b0),
+        .B1(1'b0),
+        .SB(1'b0),  
+        .S0(1'b0), .S1(1'b0),
+        .F(cntr_dual_en2)
+    );
 
     Counter_dual #(
         .WIDTH(4)
@@ -136,6 +162,17 @@ module datapath(
 
 
     // logic
+    // nor_mod nor_inst1 (
+    //     .A(cntr_3bit_co),
+    //     .B(sh1_out[15]),
+    //     .out(end_shift1)
+    // );
+    // nor_mod nor_inst2 (
+    //     .A(cntr_3bit_co),
+    //     .B(sh2_out[15]),
+    //     .out(end_shift2)
+    // );
+
     assign end_shift1 = ~cntr_3bit_co & ~sh1_out[15];
     assign end_shift2 = ~cntr_3bit_co & ~sh2_out[15];
 

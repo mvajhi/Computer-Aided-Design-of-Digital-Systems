@@ -24,6 +24,9 @@
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/top_module.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/adder.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/adder_1bit.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/not_mod.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/nor_mod.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/xor_mod.v
 	# vlog 	+acc -incr -source  +define+SIM 	$inc_path/implementation_option.vh
 		
 	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.v
