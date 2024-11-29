@@ -9,20 +9,17 @@ module controller (
     input wire end_shift2,       
 
     // counters
-    output reg cntr_3bit_en,
-    output reg cntr_dual_en,
-    output reg cntr_dual_end,
-
-    // shift
-    output reg load_shift1,
-    output reg load_shift2,
-    output reg en_shift1,
-    output reg en_shift2,
-    output reg sel_sh1,
-    output reg sel_insh2,
-    output reg sel_sh2,
-
-    output reg done
+    output wire cntr_3bit_en,
+    output wire cntr_dual_en,
+    output wire cntr_dual_end,
+    output wire load_shift1,
+    output wire load_shift2,
+    output wire en_shift1,
+    output wire en_shift2,
+    output wire sel_sh1,
+    output wire sel_insh2,
+    output wire sel_sh2,
+    output wire done
 );
 
     // State encoding
@@ -80,57 +77,76 @@ module controller (
         endcase
     end
         
-    always @(*) begin
-        cntr_3bit_en = 0;
-        cntr_dual_en = 0;
-        cntr_dual_end = 0;
-        load_shift1 = 0;
-        load_shift2 = 0;
-        en_shift1 = 0;
-        en_shift2 = 0;
-        sel_sh1 = 0;
-        sel_insh2 = 0;
-        sel_sh2 = 0;
-        done = 0;
+    // always @(*) begin
+    //     cntr_3bit_en = 0;
+    //     cntr_dual_en = 0;
+    //     cntr_dual_end = 0;
+    //     load_shift1 = 0;
+    //     load_shift2 = 0;
+    //     en_shift1 = 0;
+    //     en_shift2 = 0;
+    //     sel_sh1 = 0;
+    //     sel_insh2 = 0;
+    //     sel_sh2 = 0;
+    //     done = 0;
 
-        case (ps)
-            LOAD: begin
-                load_shift1 = 1;
-                load_shift2 = 1;
-            end
+    //     case (ps)
+    //         LOAD: begin
+    //             load_shift1 = 1;
+    //             load_shift2 = 1;
+    //         end
 
-            SHIFT: begin
-                cntr_3bit_en = 1;
-                cntr_dual_en = 1;
-            end
+    //         SHIFT: begin
+    //             cntr_3bit_en = 1;
+    //             cntr_dual_en = 1;
+    //         end
 
-            LOAD_RESULT: begin
-                sel_sh1 = 1;
-                sel_sh2 = 1;
-                load_shift1 = 1;
-                load_shift2 = 1;
-            end
+    //         LOAD_RESULT: begin
+    //             sel_sh1 = 1;
+    //             sel_sh2 = 1;
+    //             load_shift1 = 1;
+    //             load_shift2 = 1;
+    //         end
 
-            SHIFT_RESULT: begin
-                cntr_dual_end = 1;
-                en_shift1 = 1;
-                en_shift2 = 1;
-                sel_insh2 = 1;
-            end
+    //         SHIFT_RESULT: begin
+    //             cntr_dual_end = 1;
+    //             en_shift1 = 1;
+    //             en_shift2 = 1;
+    //             sel_insh2 = 1;
+    //         end
 
-            DONE: begin
-                done = 1;
-            end
-        endcase
-    end
-
-    // always @(posedge clk or posedge rst) begin
-    //     if (rst) begin
-    //         ps <= IDLE;
-    //     end else begin
-    //         ps <= ns;
-    //     end
+    //         DONE: begin
+    //             done = 1;
+    //         end
+    //     endcase
     // end
+
+    // LOAD
+    wire loads_states;
+    or_mod or_loads (
+        .a(p[2]),
+        .b(p[4]),
+        .y(loads_states)
+    );
+    assign load_shift1 = loads_states;
+    assign load_shift2 = loads_states;
+
+    // SHIFT
+    assign cntr_3bit_en = p[3];
+    assign cntr_dual_en = p[3];
+
+    // LOAD_RESULT
+    assign sel_sh1 = p[4];
+    assign sel_sh2 = p[4];
+
+    // SHIFT_RESULT
+    assign cntr_dual_end = p[5];
+    assign en_shift1 = p[5];
+    assign en_shift2 = p[5];
+    assign sel_insh2 = p[5];
+
+    // DONE
+    assign done = p[6];
 
     ShiftRegister #(
         .WIDTH(7)
