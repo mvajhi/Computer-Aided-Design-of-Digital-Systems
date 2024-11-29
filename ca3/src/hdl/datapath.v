@@ -17,7 +17,7 @@ module datapath(
     input wire sel_insh2,
     input wire sel_sh2,
 
-    output wire cntr_dual_zero,
+    output wire cntr_dual_co,
     output wire end_shift1,
     output wire end_shift2,
     output wire [31:0] result
@@ -118,7 +118,7 @@ module datapath(
         .en2(cntr_dual_en2),
         .en_d(cntr_dual_end),
         .init(4'b0000),
-        .Zero(cntr_dual_zero)
+        .co(cntr_dual_co)
     );
 
     // counter3bit
@@ -149,5 +149,5 @@ module datapath(
     );
 
     // result
-    assign result = {sh1_out, sh2_out};
+    assign result = {sh2_out, sh1_out};
 endmodule

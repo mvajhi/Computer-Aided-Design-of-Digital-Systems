@@ -14,12 +14,12 @@
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/controller.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter_in.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter_dual.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter4bit.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/datapath.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/in_ram.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/out_ram.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/multiplier.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mux.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mycells.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/shiftreg.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/top_module.v
 	# vlog 	+acc -incr -source  +define+SIM 	$inc_path/implementation_option.vh

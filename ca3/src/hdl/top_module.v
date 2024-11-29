@@ -22,7 +22,7 @@ module top_module (
     wire sel_insh2;
     wire sel_sh2;
 
-    wire cntr_dual_zero;
+    wire cntr_dual_co;
     wire end_shift1;
     wire end_shift2;
 
@@ -44,7 +44,7 @@ module top_module (
         .sel_insh2(sel_insh2),
         .sel_sh2(sel_sh2),
 
-        .cntr_dual_zero(cntr_dual_zero),
+        .cntr_dual_co(cntr_dual_co),
         .end_shift1(end_shift1),
         .end_shift2(end_shift2),
 
@@ -56,7 +56,7 @@ module top_module (
         .rst(rst),
         .start(start),
 
-        .Zero(cntr_dual_zero),
+        .cntr_dual_co(cntr_dual_co),
         .end_shift1(end_shift1),
         .end_shift2(end_shift2),
 

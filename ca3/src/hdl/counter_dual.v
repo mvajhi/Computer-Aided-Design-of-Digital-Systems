@@ -7,7 +7,7 @@ module Counter_dual #(
     input en2,
     input en_d,
     input [WIDTH-1:0] init,
-    output Zero
+    output co
 );
     
     reg [WIDTH-1:0] out;
@@ -19,10 +19,10 @@ module Counter_dual #(
         else if(en2)
             out <= out + 2;
         else if(en_d)
-            out <= out - 1;
+            out <= out + 1;
     end
 
-    assign Zero = ~(&out);
+    assign co = &out;
 endmodule
 
 

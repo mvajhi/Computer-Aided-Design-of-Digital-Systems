@@ -4,7 +4,7 @@ module controller (
 
     input wire start,     
 
-    input wire Zero,
+    input wire cntr_dual_co,
     input wire end_shift1,       
     input wire end_shift2,       
 
@@ -60,7 +60,7 @@ module controller (
             end
 
             SHIFT_RESULT: begin
-                ns = Zero ? DONE : SHIFT_RESULT;
+                ns = cntr_dual_co ? DONE : SHIFT_RESULT;
             end
 
             DONE: begin
