@@ -31,129 +31,107 @@ module controller (
     parameter SHIFT_RESULT = 7'b0100000; 
     parameter DONE         = 7'b1000000;
 
-    reg [6:0] ns;
     wire [6:0] ps;
-    reg state_shift;
+    wire state_shift;
 
-    always @(*) begin
-        ns = ps;
-        state_shift = 1'b0;
-        case (ps)
-            IDLE: begin
-                ns = start ? START : IDLE;
-                state_shift = start;
-            end
+    wire other;
+    wire end_sh1_nor_2;
+    C1 c1_inst (
+        // LOAD and OTHERS
+        .A0(other),
+        .A1(1'b1),
+        .SA(ps[2]),
 
-            START: begin
-                ns = start ? START : LOAD;
-                state_shift = (start==1'b0);
-            end
+        // IDLE and START
+        .B0(ps[1]),
+        .B1(ps[0]),
+        .SB(start),  
 
-            LOAD: begin
-                ns = SHIFT;
-                state_shift = 1'b1;
-            end
+        .S0(ps[0]),
+        .S1(ps[1]),
+        .F(state_shift)
+    );
 
-            SHIFT: begin
-                ns = (end_shift1 || end_shift2) ? SHIFT : LOAD_RESULT;
-                state_shift = (end_shift1 || end_shift2) == 1'b0;
-            end
+    C1 c1_inst_other (
+        .A0(1'b1),
+        .A1(end_sh1_nor_2),
+        .SA(ps[3]),
 
-            LOAD_RESULT: begin
-                ns = SHIFT_RESULT;
-                state_shift = 1'b1;
-            end
+        .B0(1'b1),
+        .B1(cntr_dual_co),
+        .SB(ps[5]),  // SHIFT_RESULT
 
-            SHIFT_RESULT: begin
-                ns = cntr_dual_co ? DONE : SHIFT_RESULT;
-                state_shift = cntr_dual_co;
-            end
+        .S0(ps[5]), // SHIFT_RESULT
+        .S1(ps[6]), // DONE
+        .F(other)
+    );
 
-            DONE: begin
-                ns = IDLE;
-                state_shift = 1'b1;
-            end
+    nor_mod nor_inst_end_sh1 (
+        .A(end_shift1),
+        .B(end_shift2),
+        .out(end_sh1_nor_2)
+    );
 
-        endcase
-    end
         
-    // always @(*) begin
-    //     cntr_3bit_en = 0;
-    //     cntr_dual_en = 0;
-    //     cntr_dual_end = 0;
-    //     load_shift1 = 0;
-    //     load_shift2 = 0;
-    //     en_shift1 = 0;
-    //     en_shift2 = 0;
-    //     sel_sh1 = 0;
-    //     sel_insh2 = 0;
-    //     sel_sh2 = 0;
-    //     done = 0;
-
-    //     case (ps)
-    //         LOAD: begin
-    //             load_shift1 = 1;
-    //             load_shift2 = 1;
-    //         end
-
-    //         SHIFT: begin
-    //             cntr_3bit_en = 1;
-    //             cntr_dual_en = 1;
-    //         end
-
-    //         LOAD_RESULT: begin
-    //             sel_sh1 = 1;
-    //             sel_sh2 = 1;
-    //             load_shift1 = 1;
-    //             load_shift2 = 1;
-    //         end
-
-    //         SHIFT_RESULT: begin
-    //             cntr_dual_end = 1;
-    //             en_shift1 = 1;
-    //             en_shift2 = 1;
-    //             sel_insh2 = 1;
-    //         end
-
-    //         DONE: begin
-    //             done = 1;
-    //         end
-    //     endcase
-    // end
-
+    /* Signal assignment */
     // LOAD
     wire loads_states;
     or_mod or_loads (
-        .a(p[2]),
-        .b(p[4]),
+        .a(ps[2]),
+        .b(ps[4]),
         .y(loads_states)
     );
     assign load_shift1 = loads_states;
     assign load_shift2 = loads_states;
 
     // SHIFT
-    assign cntr_3bit_en = p[3];
-    assign cntr_dual_en = p[3];
+    assign cntr_3bit_en = ps[3];
+    assign cntr_dual_en = ps[3];
 
     // LOAD_RESULT
-    assign sel_sh1 = p[4];
-    assign sel_sh2 = p[4];
+    assign sel_sh1 = ps[4];
+    assign sel_sh2 = ps[4];
 
     // SHIFT_RESULT
-    assign cntr_dual_end = p[5];
-    assign en_shift1 = p[5];
-    assign en_shift2 = p[5];
-    assign sel_insh2 = p[5];
+    assign cntr_dual_end = ps[5];
+    assign en_shift1 = ps[5];
+    assign en_shift2 = ps[5];
+    assign sel_insh2 = ps[5];
 
     // DONE
-    assign done = p[6];
+    assign done = ps[6];
+
+    wire is_first, other_first;
+    C1 c1_inst_is_first (
+        .A0(other_first),
+        .A1(1'b0),
+        .SA(loads_states),
+        .B0(1'b0),
+        .B1(1'b0),
+        .SB(1'b0),  
+        .S0(ps[0]),
+        .S1(ps[1]),
+        .F(is_first)
+    );
+
+    C1 c1_inst_other_first (
+        .A0(1'b1),
+        .A1(1'b0),
+        .SA(ps[4]),
+        .B0(1'b0),
+        .B1(1'b0),
+        .SB(1'b0),  
+        .S0(ps[3]),
+        .S1(ps[5]),
+        .F(other_first)
+    );
 
     ShiftRegister #(
         .WIDTH(7)
     ) sh1 (
         .clk(clk),
-        .rst(1'b0),
-        .load(rst),
+        .rst(rst),
+        .load(is_first),
         .shift_en(state_shift),
         .in(IDLE),
         .in_sh(ps[6]),
