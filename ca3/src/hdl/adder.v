@@ -7,5 +7,5 @@ module adder #(
     output wire [WIDTH-1:0] out,
     output wire co
 );
-    assign out = in1 + in2 + cin;
+    assign {co, out} = in1 + in2 + cin;
 endmodule
