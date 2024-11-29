@@ -1,3 +1,4 @@
-*/sim/*
+*/sim/work/*
 *.dbg
 *.wlf
+*.ini
