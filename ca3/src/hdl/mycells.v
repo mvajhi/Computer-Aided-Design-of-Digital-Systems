@@ -5,7 +5,7 @@ module C1(
     output F
 );
  initial begin 
-      $system("/home/mvajhi/code/Computer-architecture-design/ca3/codes/c1.out");
+      $system("../codes/c1.out");
     end
     wire F1, F2, S2;
 
@@ -21,7 +21,7 @@ module C2(
     output out
 );
  initial begin 
-      $system("/home/mvajhi/code/Computer-architecture-design/ca3/codes/c2.out");
+      $system("../codes/c2.out");
     end
     wire S0, S1;
 
@@ -38,7 +38,7 @@ module S1(
     output reg out
 );
  initial begin 
-      $system("/home/mvajhi/code/Computer-architecture-design/ca3/codes/s.out");
+      $system("../codes/s.out");
     end
     wire S0, S1;
     wire [1:0] select;
@@ -65,7 +65,7 @@ module S2(
     output reg out
 );
  initial begin 
-      $system("/home/mvajhi/code/Computer-architecture-design/ca3/codes/s.out");
+      $system("../codes/s.out");
     end
     wire S0, S1;
     wire [1:0] select;

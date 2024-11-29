@@ -8,14 +8,14 @@ module tb ();
     wire done;
 
     initial begin
-        in1 = 16'b0011000011001011;
-        in2 = 16'b0110111101011110;
+        in1 = 16'b1111101000010000;
+        in2 = 16'b1100001101010111;
         rst = 1;
         #10 rst = 0;
         #10 start = 1;
         #10 start = 0;
         
-        #1000 $finish;
+        #250 $finish;
     end
     always #5 clk = ~clk;
 
