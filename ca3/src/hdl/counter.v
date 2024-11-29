@@ -9,6 +9,9 @@ module Counter #(
     output wire co
 );
 
+    adder #(.WIDTH(WIDTH)) adder_inst(.in1(counter), .in2(1'b1), .cin(1'b0), .out(adder_out));
+
+    wire [WIDTH-1:0] adder_out;
     reg [WIDTH-1:0] counter;
 
     always @(posedge clk or posedge rst) begin
@@ -17,7 +20,7 @@ module Counter #(
         else if(load)
             counter <= in;
         else if(en)
-            counter <= counter + 1;
+            counter <= adder_out;
     end
 
     assign co = &counter && en;
