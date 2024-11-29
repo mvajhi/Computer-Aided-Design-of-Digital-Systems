@@ -112,7 +112,7 @@ module datapath(
 
     C2 c2_inst_en1 (
         .A1(cntr_dual_en), .B1(cntr_dual_en),
-        .A0(en_shift1), .B0(en_shift2),
+        .A0(end_shift1), .B0(end_shift2),
         .D(4'b1000),
         .out(cntr_dual_en1)
     );
