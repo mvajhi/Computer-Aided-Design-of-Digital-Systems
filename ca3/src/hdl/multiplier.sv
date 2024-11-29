@@ -50,6 +50,11 @@ module bit_multiplier
     assign xo = xi;
     assign yo = yi;
 
+    
+    // assign xy = xi & yi;
+    // assign co = (pi & xy) | (pi & ci) | (xy & ci);
+    // assign po = pi ^ xy ^ ci;
+
     and_mod and_inst (
         .a(xi),
         .b(yi),
@@ -75,15 +80,40 @@ module bit_multiplier
         .out(inv_co)
     );
 
+    wire or_pi_ci;
+    or_mod or_inst (
+        .a(pi),
+        .b(ci),
+        .y(or_pi_ci)
+    );
+
     C2 po_gen (
         .A0(pi),
         .B0(ci),
         .A1(xy),
         .B1(xy),
-        .D({1'b1, inv_co, inv_co, 1'b0}),
+        .D({1'b1, inv_co, inv_co, or_pi_ci}),
         .out(po)
     );
 
+endmodule
+
+module or_mod
+(
+    input a, b,
+    output y
+);
+    C1 or_inst (
+        .A0(1'b0),
+        .A1(1'b0),
+        .SA(1'b0),
+        .B0(1'b1),
+        .B1(1'b1),
+        .SB(1'b1),
+        .S0(a),
+        .S1(b),
+        .F(y)
+    );
 endmodule
 
 module and_mod
