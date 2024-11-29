@@ -1,6 +1,6 @@
 module ShiftRegister #(
-    parameter WIDTH = 8
-) (
+    parameter WIDTH = 16
+)  (
     input clk,
     input rst,
     input load,
