@@ -20,16 +20,14 @@ module datapath(
     output wire cntr_dual_zero,
     output wire end_shift1,
     output wire end_shift2,
-    output wire [31:0] result,
+    output wire [31:0] result
 );
-
-
-
+    wire [15:0] multi_result;
 
     // shift1
     wire [15:0] sh1_out;
 
-    wire en_shift1_,
+    wire en_shift1_;
     multiplexer #(
         .WIDTH(1)
     ) sh1_en_mux (
@@ -50,7 +48,7 @@ module datapath(
     );
 
     ShiftRegister #(
-        .DATA_WIDTH(16)
+        .WIDTH(16)
     ) sh1 (
         .clk(clk),
         .rst(rst),
@@ -64,7 +62,7 @@ module datapath(
     // shift2
     wire [15:0] sh2_out;
 
-    wire en_shift2_,
+    wire en_shift2_;
     multiplexer #(
         .WIDTH(1)
     ) sh2_en_mux (
@@ -95,7 +93,7 @@ module datapath(
     );
 
     ShiftRegister #(
-        .DATA_WIDTH(16)
+        .WIDTH(16)
     ) sh2 (
         .clk(clk),
         .rst(rst),
@@ -142,8 +140,13 @@ module datapath(
     assign end_shift2 = ~cntr_3bit_co & ~sh2_out[15];
 
     // multiplier
-    wire [15:0] multi_result;
-    assign multi_result = sh1_out[15:8] * sh2_out[15:8];
+    multiplier #(
+        .WIDTH(8)
+    ) mult (
+        .in1(sh1_out[15:8]),
+        .in2(sh2_out[15:8]),
+        .out(multi_result)
+    );
 
     // result
     assign result = {sh1_out, sh2_out};

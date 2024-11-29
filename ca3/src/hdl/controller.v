@@ -26,13 +26,13 @@ module controller (
 );
 
     // State encoding
-    parameter IDLE = 3'b0000; 
-    parameter START = 3'b0001;
-    parameter LOAD = 3'b0010; 
-    parameter SHIFT = 3'b0011; 
-    parameter LOAD_RESULT = 3'b1000; 
-    parameter SHIFT_RESULT = 3'b0100; 
-    parameter DONE = 3'b0101;
+    parameter IDLE = 3'd0; 
+    parameter START = 3'd1;
+    parameter LOAD = 3'd2; 
+    parameter SHIFT = 3'd3; 
+    parameter LOAD_RESULT = 3'd4; 
+    parameter SHIFT_RESULT = 3'd5; 
+    parameter DONE = 3'd6;
 
     reg [3:0] ps, ns;
 
@@ -64,7 +64,7 @@ module controller (
             end
 
             DONE: begin
-                ns = START;
+                ns = IDLE;
             end
 
         endcase
@@ -106,6 +106,10 @@ module controller (
                 en_shift1 = 1;
                 en_shift2 = 1;
                 sel_insh2 = 1;
+            end
+
+            DONE: begin
+                done = 1;
             end
         endcase
     end

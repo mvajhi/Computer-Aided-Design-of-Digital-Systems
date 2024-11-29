@@ -2,100 +2,77 @@ module top_module (
     input clk,
     input rst,
     input start,
+
+    input [15:0] in1,
+    input [15:0] in2,
+
+    output [31:0] result,
     output done
 );
-    // counter
-    wire cntr_ld_init;
-    wire cntr_ld_en;
-    wire cntr_sh_en;
-    wire cntr_sh_ld;
-    wire cntr_sh1_en;
-    wire cntr_sh2_en;
 
-    // shift
+    wire cntr_3bit_en;
+    wire cntr_dual_en;
+    wire cntr_dual_end;
+
     wire load_shift1;
     wire load_shift2;
-    wire sh_result_ld;
-    wire sh_result_shift;
+    wire en_shift1;
+    wire en_shift2;
+    wire sel_sh1;
+    wire sel_insh2;
+    wire sel_sh2;
 
-    // ram
-    wire wr_out_ram;
-
-    wire lsb_cnt;
-
-    wire co_cnt_sh;
-    wire co_cntr_ld; 
-    wire cntr_sh1_init;
-    wire cntr_sh2_init;
-
+    wire cntr_dual_zero;
     wire end_shift1;
     wire end_shift2;
 
-    wire en_shift1;
-    wire en_shift2;
-
-    datapath dp
-    (
+    datapath dp (
         .clk(clk),
         .rst(rst),
+        .in1(in1),
+        .in2(in2),
 
-        // input
-        .cntr_ld_init(cntr_ld_init),
-        .cntr_ld_en(cntr_ld_en),
-        .cntr_sh_en(cntr_sh_en),
-        .cntr_sh_ld(cntr_sh_ld),
-        .cntr_sh1_en(cntr_sh1_en),
-        .cntr_sh2_en(cntr_sh2_en),
+        .cntr_3bit_en(cntr_3bit_en),
+        .cntr_dual_en(cntr_dual_en),
+        .cntr_dual_end(cntr_dual_end),
 
         .load_shift1(load_shift1),
         .load_shift2(load_shift2),
         .en_shift1(en_shift1),
         .en_shift2(en_shift2),
-        .sh_result_ld(sh_result_ld),
-        .sh_result_shift(sh_result_shift),
+        .sel_sh1(sel_sh1),  
+        .sel_insh2(sel_insh2),
+        .sel_sh2(sel_sh2),
 
-        .wr_out_ram(wr_out_ram),
-
-        // output
-        .lsb_cnt(lsb_cnt),
-
-        .co_cnt_sh(co_cnt_sh),
-        .co_cntr_ld(co_cntr_ld), 
-        .cntr_sh1_init(cntr_sh1_init),
-        .cntr_sh2_init(cntr_sh2_init),
-
+        .cntr_dual_zero(cntr_dual_zero),
         .end_shift1(end_shift1),
-        .end_shift2(end_shift2) 
+        .end_shift2(end_shift2),
+
+        .result(result)
     );
 
-    controller ctrl
-    (
+    controller ctrl (
         .clk(clk),
         .rst(rst),
         .start(start),
-        .done(done),
 
-        .lsb_cnt(lsb_cnt),
+        .Zero(cntr_dual_zero),
         .end_shift1(end_shift1),
         .end_shift2(end_shift2),
-        .co_cnt_sh(co_cnt_sh),
-        .co_cntr_ld(co_cntr_ld),
 
-        .initial_cnt_load(cntr_ld_init),
-        .ld_cnt_sh(cntr_sh_ld),
-        .initial_cnt_sh1(cntr_sh1_init),
-        .initial_cnt_sh2(cntr_sh2_init),
+        .cntr_3bit_en(cntr_3bit_en),
+        .cntr_dual_en(cntr_dual_en),    
+        .cntr_dual_end(cntr_dual_end),
+
         .load_shift1(load_shift1),
         .load_shift2(load_shift2),
         .en_shift1(en_shift1),
         .en_shift2(en_shift2),
-        .en_cnt_load(cntr_ld_en),
-        .en_cnt_sh1(cntr_sh1_en),
-        .en_cnt_sh2(cntr_sh2_en),
-        .en_cnt_sh(cntr_sh_en),
-        .load_result(sh_result_ld),
-        .shift_result(sh_result_shift),
-        .wr_ram(wr_out_ram)
+        .sel_sh1(sel_sh1),
+        .sel_insh2(sel_insh2),
+        .sel_sh2(sel_sh2),
+
+        .done(done)
     );
 
 endmodule
