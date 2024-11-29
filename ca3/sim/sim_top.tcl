@@ -17,7 +17,7 @@
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter_dual.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/counter.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/datapath.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/multiplier.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/multiplier.sv
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mux.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/mycells.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/shiftreg.v

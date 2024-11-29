@@ -16,21 +16,28 @@ module multiplier #(
                 bit_multiplier inst(
                     .xi(xv[i][j]),
                     .yi(yv[i][j]),
-                    .pi(pv[i][j]),
+                    .pi(pv[i][j+1]),
                     .ci(cv[i][j]),
                     .xo(xv[i][j+1]),
                     .yo(yv[i+1][j]),
                     .po(pv[i+1][j]),
-                    .co(cv[i+1][j+1])
+                    .co(cv[i][j+1])
                 );
             end
         end
     endgenerate
 
-    assign xv[0][0] = in1[0];
-    assign yv[0][0] = in2[0];
-
-    assign out = {pv[WIDTH][WIDTH-1:0]};
+    generate
+        for (i = 0; i < WIDTH; i = i + 1) begin : xv_gen
+            assign xv[i][0] = in1[i];
+            assign cv[i][0] = 1'b0;
+            assign pv[0][i + 1] = 1'b0;
+            assign pv[i + 1][WIDTH] = cv[i][WIDTH];
+            assign yv[0][i] = in2[i];
+            assign out[i] = pv[i + 1][0];
+            assign out[i + WIDTH] = pv[WIDTH][i + 1];
+        end
+    endgenerate
 
 endmodule
 
@@ -64,7 +71,7 @@ module bit_multiplier
     wire inv_co;
     not_mod not_co
     (
-        .in(co),
+        .A(co),
         .out(inv_co)
     );
 
