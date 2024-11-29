@@ -6,6 +6,7 @@ module ShiftRegister #(
     input load,
     input shift_en,
     input [WIDTH-1:0] in,
+    input in_sh,
     output reg [WIDTH-1:0] out
 );
     
@@ -15,7 +16,7 @@ module ShiftRegister #(
         else if(load)
             out <= in;
         else if(shift_en)
-            out <= {out[WIDTH-2:0], 1'b0};
+            out <= {out[WIDTH-2:0], in_sh};
     end
     
 endmodule
