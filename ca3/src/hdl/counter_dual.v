@@ -9,22 +9,25 @@ module Counter_dual #(
     input [WIDTH-1:0] init,
     output co
 );
-    
-    adder #(
-        .WIDTH(WIDTH)
-    ) adder_inst_1( .in1(out), .in2(en1 || en2 || en_d), .cin(en2), .out(adder_out));
-
     wire [WIDTH-1:0] adder_out;
     reg [WIDTH-1:0] out;
+    
+    wire temp;
+    assign temp = (en1 | en2) | en_d;
+
+    adder #(
+        .WIDTH(WIDTH)
+    ) adder_inst_1( .in1(out), .in2({3'b0, temp}), .cin(en2), .out(adder_out));
+
 
     always @(posedge clk or posedge rst) begin
         if(rst)
             out <= {WIDTH{1'b0}};
+        else if(en_d)
+            out <= adder_out;
         else if(en2)
             out <= adder_out;
         else if(en1)
-            out <= adder_out;
-        else if(en_d)
             out <= adder_out;
     end
 

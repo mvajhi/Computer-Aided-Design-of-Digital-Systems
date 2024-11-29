@@ -4,7 +4,7 @@ module tb ();
     reg start = 0;
     reg [15:0] in1;
     reg [15:0] in2;
-    wire [31:0] out;
+    wire [15:0] out;
     wire done;
 
     initial begin
@@ -19,13 +19,15 @@ module tb ();
     end
     always #5 clk = ~clk;
 
-    top_module tm (
-        .clk(clk),
-        .rst(rst),
-        .start(start),
-        .in1(in1),
-        .in2(in2),
-        .result(out),
-        .done(done)
-    );
+    adder #(.WIDTH(16)) adder_inst(.in1(in1), .in2(in2), .cin(1'b0), .out(out));
+
+    // top_module tm (
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .start(start),
+    //     .in1(in1),
+    //     .in2(in2),
+    //     .result(out),
+    //     .done(done)
+    // );
 endmodule
