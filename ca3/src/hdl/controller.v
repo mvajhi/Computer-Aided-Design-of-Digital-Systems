@@ -26,45 +26,55 @@ module controller (
 );
 
     // State encoding
-    parameter IDLE = 3'd0; 
-    parameter START = 3'd1;
-    parameter LOAD = 3'd2; 
-    parameter SHIFT = 3'd3; 
-    parameter LOAD_RESULT = 3'd4; 
-    parameter SHIFT_RESULT = 3'd5; 
-    parameter DONE = 3'd6;
+    parameter IDLE         = 7'b0000001; 
+    parameter START        = 7'b0000010;
+    parameter LOAD         = 7'b0000100; 
+    parameter SHIFT        = 7'b0001000; 
+    parameter LOAD_RESULT  = 7'b0010000; 
+    parameter SHIFT_RESULT = 7'b0100000; 
+    parameter DONE         = 7'b1000000;
 
-    reg [3:0] ps, ns;
+    reg [6:0] ns;
+    wire [6:0] ps;
+    reg state_shift;
 
     always @(*) begin
         ns = ps;
+        state_shift = 1'b0;
         case (ps)
             IDLE: begin
                 ns = start ? START : IDLE;
+                state_shift = start;
             end
 
             START: begin
                 ns = start ? START : LOAD;
+                state_shift = (start==1'b0);
             end
 
             LOAD: begin
                 ns = SHIFT;
+                state_shift = 1'b1;
             end
 
             SHIFT: begin
                 ns = (end_shift1 || end_shift2) ? SHIFT : LOAD_RESULT;
+                state_shift = (end_shift1 || end_shift2) == 1'b0;
             end
 
             LOAD_RESULT: begin
                 ns = SHIFT_RESULT;
+                state_shift = 1'b1;
             end
 
             SHIFT_RESULT: begin
                 ns = cntr_dual_co ? DONE : SHIFT_RESULT;
+                state_shift = cntr_dual_co;
             end
 
             DONE: begin
                 ns = IDLE;
+                state_shift = 1'b1;
             end
 
         endcase
@@ -114,12 +124,24 @@ module controller (
         endcase
     end
 
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            ps <= IDLE;
-        end else begin
-            ps <= ns;
-        end
-    end
+    // always @(posedge clk or posedge rst) begin
+    //     if (rst) begin
+    //         ps <= IDLE;
+    //     end else begin
+    //         ps <= ns;
+    //     end
+    // end
+
+    ShiftRegister #(
+        .WIDTH(7)
+    ) sh1 (
+        .clk(clk),
+        .rst(1'b0),
+        .load(rst),
+        .shift_en(state_shift),
+        .in(IDLE),
+        .in_sh(ps[6]),
+        .out(ps)
+    );
 
 endmodule
