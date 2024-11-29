@@ -8,7 +8,7 @@ module C1(
 
     assign F1 = SA ? A1 : A0;
     assign F2 = SB ? B1 : B0;
-    assign S2 = S1 & S0;
+    assign S2 = S1 | S0;
     assign F = S2 ? F2 : F1;
 endmodule
 
