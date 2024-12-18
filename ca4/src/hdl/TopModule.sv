@@ -16,17 +16,17 @@ module topmodule #(
     input clk,
     input rst,
     input start,
-    input [STRIDE_SIZE-1:0] stride,
-    input [FILTER_SIZE_REG_SIZE-1:0] filter_size,
-    input [IFMAP_WIDTH-1:0] IFMap_in,
-    input [FILTER_WIDTH-1:0] Filter_in,
+    input [STRIDE_SIZE - 1:0] stride,
+    input [FILTER_SIZE_REG_SIZE - 1:0] filter_size,
+    input [(IFMAP_WIDTH * PAR_WRITE_IFMAP) - 1:0] IFMap_in,
+    input [(FILTER_WIDTH * PAR_WRITE_FILTER) - 1:0] Filter_in,
 
     input wen_IFMap_buffer,
     input wen_Filter_buffer,
     input ren_Psum_buffer,
     input chip_en,
 
-    output [IFMAP_WIDTH-1:0] Psum_out,
+    output [(IFMAP_WIDTH - 2)-1:0] Psum_out,
     output done
 );
 

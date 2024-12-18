@@ -8,7 +8,7 @@ module Read_Controller_IFMap #(
     input next_row,
     input end_row,
     input co_filter,
-    input len_counter,
+    input [POINTER_SIZE-1:0] len_counter,
     input av_input,
     
     output av_data,

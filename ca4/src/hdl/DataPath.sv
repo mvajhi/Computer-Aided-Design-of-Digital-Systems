@@ -17,8 +17,8 @@ module dp #(
     input rst,
     input [STRIDE_SIZE-1:0] stride,
     input [FILTER_SIZE_REG_SIZE-1:0] filter_size,
-    input [IFMAP_WIDTH-1:0] IFMap_in,
-    input [FILTER_WIDTH-1:0] Filter_in,
+    input [(IFMAP_WIDTH * PAR_WRITE_IFMAP)-1:0] IFMap_in,
+    input [(FILTER_WIDTH * PAR_WRITE_FILTER)-1:0] Filter_in,
 
     input wen_IFMap_buffer,
     input wen_Filter_buffer,
@@ -41,9 +41,17 @@ module dp #(
     output end_of_row,
     output end_of_filter,
 
-    output [IFMAP_WIDTH-1:0] Psum_out,
+    output [(IFMAP_WIDTH - 2)-1:0] Psum_out,
     output done
 );
+
+wire [IFMAP_WIDTH-1:0] IFMap_scratch_pad_out;
+wire [IFMAP_POINTER_SIZE-1:0] IFMap_read_pointer;
+wire [IFMAP_POINTER_SIZE-1:0] IFMap_write_pointer;
+wire [IFMAP_POINTER_SIZE-1:0] len_counter_out;
+wire [STRIDE_SIZE-1:0] stride_IFMap_cntl_out;
+wire inc_len, dec_len;
+wire wen_IFMap_cntr, wen_IFMap_src_pad;
 
 wire [STRIDE_SIZE-1:0] stride_reg_out;
 wire [FILTER_SIZE_REG_SIZE-1:0] filter_size_out;
@@ -54,7 +62,7 @@ Register #(FILTER_SIZE_REG_SIZE) filter_reg(clk, rst, ld_fileSize, filter_size, 
 // IFMap
 
 wire [IFMAP_WIDTH-1:0] IFMap_buffer_out;
-wire IFMap_empty;
+wire IFMap_empty, IFMap_full;
 
 Fifo_buffer #(
     .DATA_WIDTH(IFMAP_WIDTH),
@@ -69,10 +77,10 @@ Fifo_buffer #(
     .wen(wen_IFMap_buffer),
     .din(IFMap_in),
     .dout(IFMap_buffer_out),
-    .empty(IFMap_empty)
+    .empty(IFMap_empty),
+    .full(IFMap_full)
 );
 
-wire [IFMAP_POINTER_SIZE-1:0] IFMap_scratch_pad_out;
 
 Read_Controller_IFMap #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -176,6 +184,7 @@ Pipeline1 #(
 // Filter
 
 wire [FILTER_WIDTH-1:0] Filter_buffer_out;
+wire Filter_empty, Filter_full;
 Fifo_buffer #(
     .DATA_WIDTH(FILTER_WIDTH),
     .PAR_WRITE(PAR_WRITE_FILTER),
@@ -189,7 +198,8 @@ Fifo_buffer #(
     .wen(wen_Filter_buffer),
     .din(Filter_in),
     .dout(Filter_buffer_out),
-    .empty(Filter_empty)
+    .empty(Filter_empty),
+    .full(Filter_full)
 );
 
 Read_Controller_Filter #(
@@ -299,6 +309,7 @@ Pipeline2 #(
     .co_filter_out(co_filter_line2)
 );
 
+wire sum_empty, sum_full;
 
 Fifo_buffer #(
     .DATA_WIDTH(IFMAP_WIDTH-2),
@@ -313,7 +324,9 @@ Fifo_buffer #(
     .wen(co_filter_line2),
     .din(out_line2),
 
-    .dout(Psum_out)
+    .dout(Psum_out),
+    .empty(sum_empty),
+    .full(sum_full)
 );
 
 
