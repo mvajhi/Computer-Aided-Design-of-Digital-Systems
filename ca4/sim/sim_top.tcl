@@ -12,17 +12,7 @@
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/ALUMinus.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/ALUMinus2.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/Decrementer.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/FIFOBUF2.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/Incrementer.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/MinThreshold.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/MUX2to1.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/Register.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/SimpleBuf.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/Threshold_unit.v
-
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/*.v
 
 	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.sv
 	onerror {break}
