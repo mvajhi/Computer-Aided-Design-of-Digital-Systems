@@ -163,13 +163,13 @@ wire stall_line0;
 wire done_line0;
 wire co_filter_line0;
 Pipeline1 #(
-    .DATA_WIDTH(IFMAP_WIDTH)
+    .DATA_WIDTH(IFMAP_WIDTH - 2)
 ) line0 (
     .clk(clk),
     .rst(rst),
     .stall_in(!put_data),
     .done_in(end_of_row && end_of_filter),
-    .in(IFMap_scratch_pad_out),
+    .in(IFMap_scratch_pad_out[IFMAP_WIDTH - 3:0]),
     .co_filter(co_filter),
 
     .out(IFMap_scratch_pad_reg_out),
@@ -201,6 +201,9 @@ Fifo_buffer #(
     .empty(Filter_empty),
     .full(Filter_full)
 );
+
+wire [FILTER_POINTER_SIZE-1:0] Filter_write_pointer;
+wire [FILTER_POINTER_SIZE-1:0] Filter_read_pointer;
 
 Read_Controller_Filter #(
     .SP_SIZE(FILTER_WIDTH),
@@ -262,21 +265,21 @@ ReadAddressGeneratorFilter #(
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-wire [IFMAP_WIDTH + FILTER_WIDTH - 1:0] mult_out;
+wire [IFMAP_WIDTH + FILTER_WIDTH - 3:0] mult_out;
 assign mult_out = Filter_scratch_pad_out * IFMap_scratch_pad_reg_out;
 
-wire [IFMAP_WIDTH-1:0] out_line1;
+wire [IFMAP_WIDTH-3:0] out_line1;
 wire stall_line1;
 wire done_line1;
 wire co_filter_line1;
 Pipeline1 #(
-    .DATA_WIDTH(IFMAP_WIDTH)
+    .DATA_WIDTH(IFMAP_WIDTH - 2)
 ) line1 (
     .clk(clk),
     .rst(rst),
     .stall_in(stall_line0),
     .done_in(done_line0),
-    .in(mult_out[IFMAP_WIDTH - 1:0]),
+    .in(mult_out[IFMAP_WIDTH - 3:0]),
     .co_filter(co_filter_line0),
 
     .out(out_line1),
@@ -285,16 +288,16 @@ Pipeline1 #(
     .co_filter_out(co_filter_line1)
 );
 
-wire [IFMAP_WIDTH-1:0] out_line2;
+wire [IFMAP_WIDTH-3:0] out_line2;
 
-wire [IFMAP_WIDTH-1:0] out_sum;
+wire [IFMAP_WIDTH-3:0] out_sum;
 assign out_sum = out_line1 + out_line2;
 
 wire stall_line2;
 wire done_line2;
 wire co_filter_line2;
 Pipeline2 #(
-    .DATA_WIDTH(IFMAP_WIDTH)
+    .DATA_WIDTH(IFMAP_WIDTH-2)
 ) line2 (
     .clk(clk),
     .rst(rst),
