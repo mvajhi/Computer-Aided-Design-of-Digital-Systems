@@ -93,7 +93,7 @@ dp #(
 );
 
 
-main_controller (
+main_controller fuck_you (
     .clk(clk),
     .rst(rst),
     .start(start),

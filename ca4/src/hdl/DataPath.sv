@@ -301,7 +301,7 @@ Pipeline2 #(
 
 
 Fifo_buffer #(
-    .DATA_WIDTH(IFMAP_WIDTH),
+    .DATA_WIDTH(IFMAP_WIDTH-2),
     .PAR_WRITE(1),
     .PAR_READ(1),
     .DEPTH(PSUM_DEPTH)

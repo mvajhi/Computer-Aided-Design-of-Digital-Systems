@@ -2,8 +2,15 @@ module TB ();
     reg rst=0;
     reg clk=0;
     reg [(16 + 2) * 7 - 1:0] data_in;
-    reg [16 * 3 - 1:0] filter_in;
+    reg [16 * 9 - 1:0] filter_in;
+    reg start = 1'b1;
+    reg [2:0] stride = 2'd2;
+    reg w_data = 1'b0;
+    reg w_filter = 1'b0;
     wire [15:0] data_out;
+    wire done;
+    wire r_sum;
+
 
     always #5 clk = ~clk;
 
@@ -16,5 +23,42 @@ module TB ();
 
         filter_in = {{16'd1, 16'd2, 16'd3}, {16'd3, 16'd4, 16'd5}, {16'd5, 16'd6, 16'd7}};
 
+        w_data = 1'b1;
+        w_filter = 1'b1;
+
+        #10 w_data = 1'b0;
+        #10 w_filter = 1'b0;
+
+        #20 $stop;
     end 
+
+    topmodule #(
+        .PSUM_DEPTH(16),
+        .IFMAP_WIDTH(18),
+        .IFMAP_BUFFER_DEPTH(16),
+        .IFMAP_POINTER_SIZE(3),
+        .IFMAP_SPAD_ROW(7),
+        .FILTER_SPAD_ROW(9),
+        .FILTER_BUFFER_DEPTH(16),
+        .FILTER_WIDTH(16),
+        .FILTER_SIZE_REG_SIZE(2),
+        .FILTER_POINTER_SIZE(4),
+        .STRIDE_SIZE(3),
+        .PAR_WRITE_IFMAP(7),
+        .PAR_WRITE_FILTER(9)
+    ) UUT (
+        .clk(clk),
+        .rst(rst),
+        .start(start),
+        .stride(stride),
+        .filter_size(2'd3),
+        .IFMap_in(data_in),
+        .Filter_in(filter_in),
+        .wen_IFMap_buffer(w_data),
+        .wen_Filter_buffer(w_filter),
+        .ren_Psum_buffer(r_sum),
+        .chip_en(1'b1),
+        .Psum_out(data_out),
+        .done(done)
+    );
 endmodule
