@@ -1,8 +1,9 @@
-module Read_Controller_Filter #(
+module Read_Controller_IFMap #(
     parameter SP_size = 8,
     parameter FILTER_SIZE = 8,
     parameter POINTER_SIZE = 8,
-    parameter SIZE_IFMAP = 32
+    parameter SIZE_IFMAP = 32,
+    parameter SIZE_STRIDE = 3
 ) (
     input [POINTER_SIZE-1:0] read_pointer,
     input [POINTER_SIZE-1:0] write_pointer,
@@ -12,11 +13,11 @@ module Read_Controller_Filter #(
     input len_counter,
     input av_input,
     
-    output av_data
+    output av_data,
     output end_of_row,
     output ld_start_row,
     output write_counter_en,
-    output stride,
+    output [SIZE_STRIDE-1:0] stride,
     output inc_len,
     output dec_len,
     output write_en_src_pad
