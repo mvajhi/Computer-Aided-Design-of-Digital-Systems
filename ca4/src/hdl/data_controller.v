@@ -1,5 +1,5 @@
 module Read_Controller_Filter #(
-    parameter SP_size = 8,
+    parameter SP_SIZE = 8,
     parameter FILTER_SIZE = 8,
     parameter POINTER_SIZE = 8,
     parameter SIZE_IFMAP = 32
