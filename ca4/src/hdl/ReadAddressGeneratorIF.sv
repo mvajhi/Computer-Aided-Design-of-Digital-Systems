@@ -36,7 +36,12 @@ always @(posedge clk or posedge rst) begin
         counter <= 0;
     end
     else if (put_data) begin
-        counter <= counter + 1;
+        if (counter == filter_size - 1) begin
+            counter <= 0;
+        end
+        else begin
+            counter <= counter + 1;
+        end
     end
 end
 
