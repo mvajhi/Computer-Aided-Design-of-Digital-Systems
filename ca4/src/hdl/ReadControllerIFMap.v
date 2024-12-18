@@ -1,9 +1,6 @@
 module Read_Controller_IFMap #(
-    parameter SP_size = 8,
-    parameter FILTER_SIZE = 8,
     parameter POINTER_SIZE = 8,
-    parameter SIZE_IFMAP = 32,
-    parameter SIZE_STRIDE = 3
+    parameter STRIDE_SIZE = 3
 ) (
     input [POINTER_SIZE-1:0] read_pointer,
     input [POINTER_SIZE-1:0] write_pointer,
@@ -17,7 +14,7 @@ module Read_Controller_IFMap #(
     output end_of_row,
     output ld_start_row,
     output write_counter_en,
-    output [SIZE_STRIDE-1:0] stride,
+    output [STRIDE_SIZE-1:0] stride,
     output inc_len,
     output dec_len,
     output write_en_src_pad
@@ -25,7 +22,7 @@ module Read_Controller_IFMap #(
     assign av_data = (len_counter == 0);
     assign end_of_row = end_row;
     assign ld_start_row = next_row;
-    assign write_counter_en = av_input && (len_counter < SIZE_IFMAP);
+    assign write_counter_en = av_input && (len_counter < IFMAP_SIZE);
     assign stride = co_filter;
     assign inc_len = write_counter_en;
     assign dec_len = next_row;
