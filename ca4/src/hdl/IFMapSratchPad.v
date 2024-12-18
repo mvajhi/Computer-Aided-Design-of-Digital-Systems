@@ -4,7 +4,7 @@ module IFMapSratchPad #(
 ) (
     input clk,
     input rst,
-    input [IFMAP_BUFFER_WIDTH-1:0] din,
+    input [IFMAP_SPAD_WIDTH-1:0] din,
     input raddr,
     input waddr,
     input wen,
