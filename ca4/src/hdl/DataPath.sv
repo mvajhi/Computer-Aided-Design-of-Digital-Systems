@@ -82,10 +82,10 @@ wire av_input, IFMap_full;
 // );
 
 FIFOBuf2 #(
-    .ADDR_WIDTH(4),
-    .DATA_WIDTH(16),
-    .DEPTH(8),
-    .PAR_WRITE(4),
+    .ADDR_WIDTH(50),
+    .DATA_WIDTH(IFMAP_WIDTH),
+    .DEPTH(IFMAP_BUFFER_DEPTH),
+    .PAR_WRITE(PAR_WRITE_IFMAP),
     .PAR_READ(1)
 ) IFMap_buffer (
     .clk(clk),

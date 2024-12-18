@@ -49,7 +49,7 @@ module TB ();
         .FILTER_SIZE_REG_SIZE(2),
         .FILTER_POINTER_SIZE(4),
         .STRIDE_SIZE(3),
-        .PAR_WRITE_IFMAP(4),
+        .PAR_WRITE_IFMAP(8),
         .PAR_WRITE_FILTER(9)
     ) UUT (
         .clk(clk),
