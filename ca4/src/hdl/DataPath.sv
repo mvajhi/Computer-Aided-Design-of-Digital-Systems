@@ -15,7 +15,6 @@ module dp #(
 ) (
     input clk,
     input rst,
-    input start,
     input [STRIDE_SIZE-1:0] stride,
     input [FILTER_SIZE_REG_SIZE-1:0] filter_size,
     input [IFMAP_WIDTH-1:0] IFMap_in,
