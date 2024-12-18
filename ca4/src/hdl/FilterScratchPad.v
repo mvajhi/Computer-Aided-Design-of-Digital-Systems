@@ -31,11 +31,11 @@ always @(posedge clk or posedge rst) begin
         end
     end    
     else begin
-        if (wen) begin
-            mem[waddr] <= din;
-        end
-        else if (ren) begin
+        if (ren) begin
             dout <= mem[raddr];
+        end
+        else if (wen) begin
+            mem[waddr] <= din;
         end
     end 
 end

@@ -7,6 +7,7 @@ module main_controller (
     input co_filter,
     input end_of_row,
     input end_of_filter,
+    
     output reg ld_stride,
     output reg ld_fileSize,
     output reg put_data,
