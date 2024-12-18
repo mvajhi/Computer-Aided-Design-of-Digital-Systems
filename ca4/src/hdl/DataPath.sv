@@ -204,22 +204,41 @@ Pipeline1 #(
 
 wire [FILTER_WIDTH-1:0] Filter_buffer_out;
 wire Filter_empty, Filter_full;
-Fifo_buffer #(
+
+// Fifo_buffer #(
+//     .DATA_WIDTH(FILTER_WIDTH),
+//     .PAR_WRITE(PAR_WRITE_FILTER),
+//     .PAR_READ(1),
+//     .DEPTH(FILTER_BUFFER_DEPTH)
+// ) Filter_buffer (
+//     .clk(clk),
+//     .rstn(!rst),
+//     .clear(clear_sum),
+//     .ren(wen_Filter_src_pad),
+//     .wen(wen_Filter_buffer),
+//     .din(Filter_in),
+//     .dout(Filter_buffer_out),
+//     .empty(Filter_empty),
+//     .full(Filter_full)
+// );
+
+FIFOBuf2 #(
+    .ADDR_WIDTH($clog2(FILTER_BUFFER_DEPTH)),
     .DATA_WIDTH(FILTER_WIDTH),
+    .DEPTH(FILTER_BUFFER_DEPTH),
     .PAR_WRITE(PAR_WRITE_FILTER),
-    .PAR_READ(1),
-    .DEPTH(FILTER_BUFFER_DEPTH)
+    .PAR_READ(1)
 ) Filter_buffer (
     .clk(clk),
-    .rstn(!rst),
-    .clear(clear_sum),
-    .ren(wen_Filter_src_pad),
-    .wen(wen_Filter_buffer),
+    .rst(rst),
+    .read_enable(wen_Filter_src_pad),
+    .write_enable(wen_Filter_buffer),
     .din(Filter_in),
-    .dout(Filter_buffer_out),
-    .empty(Filter_empty),
-    .full(Filter_full)
+    .ready(Filter_full),
+    .valid(!Filter_empty),
+    .dout(Filter_buffer_out)
 );
+
 
 wire [FILTER_POINTER_SIZE-1:0] Filter_write_pointer;
 wire [FILTER_POINTER_SIZE-1:0] Filter_read_pointer;
@@ -333,24 +352,39 @@ Pipeline2 #(
 
 wire sum_empty, sum_full;
 
-Fifo_buffer #(
+// Fifo_buffer #(
+//     .DATA_WIDTH(IFMAP_WIDTH-2),
+//     .PAR_WRITE(1),
+//     .PAR_READ(1),
+//     .DEPTH(PSUM_DEPTH)
+// ) Sum_buffer (
+//     .clk(clk),
+//     .rstn(!rst),
+//     .clear(clear_sum),
+//     .ren(ren_Psum_buffer),
+//     .wen(co_filter_line2),
+//     .din(out_line2),
+
+//     .dout(Psum_out),
+//     .empty(sum_empty),
+//     .full(sum_full)
+// );
+
+FIFOBuf2 #(
+    .ADDR_WIDTH($clog2(IFMAP_WIDTH-2)),
     .DATA_WIDTH(IFMAP_WIDTH-2),
+    .DEPTH(PSUM_DEPTH),
     .PAR_WRITE(1),
-    .PAR_READ(1),
-    .DEPTH(PSUM_DEPTH)
+    .PAR_READ(1)
 ) Sum_buffer (
     .clk(clk),
-    .rstn(!rst),
-    .clear(clear_sum),
-    .ren(ren_Psum_buffer),
-    .wen(co_filter_line2),
+    .rst(rst),
+    .read_enable(ren_Psum_buffer),
+    .write_enable(co_filter_line2),
     .din(out_line2),
-
-    .dout(Psum_out),
-    .empty(sum_empty),
-    .full(sum_full)
+    .ready(!sum_full),
+    .valid(!sum_empty),
+    .dout(Psum_out)
 );
-
-
 
 endmodule
