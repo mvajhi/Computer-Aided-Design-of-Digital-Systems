@@ -23,7 +23,7 @@ always @(posedge clk or posedge rst) begin
     else if (next_row) begin
         offset <= 0;
     end
-    else if (put_data && counter == filter_size) begin
+    else if (put_data && counter == filter_size - 1) begin
         offset <= offset + stride;
     end
 end

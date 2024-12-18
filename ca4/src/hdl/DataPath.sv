@@ -27,7 +27,7 @@ module dp #(
 
     // controller
     input ld_stride,
-    input ld_fileSize,
+    input ld_filterSize,
     input put_data,
     input put_filter,
     input clear_sum,
@@ -57,49 +57,68 @@ wire [STRIDE_SIZE-1:0] stride_reg_out;
 wire [FILTER_SIZE_REG_SIZE-1:0] filter_size_out;
 
 Register #(STRIDE_SIZE) stride_reg(clk, rst, ld_stride, stride, stride_reg_out);
-Register #(FILTER_SIZE_REG_SIZE) filter_reg(clk, rst, ld_fileSize, filter_size, filter_size_out);
+Register #(FILTER_SIZE_REG_SIZE) filter_reg(clk, rst, ld_filterSize, filter_size, filter_size_out);
 
 // IFMap
 
 wire [IFMAP_WIDTH-1:0] IFMap_buffer_out;
-wire IFMap_empty, IFMap_full;
+wire av_input, IFMap_full;
 
-Fifo_buffer #(
-    .DATA_WIDTH(IFMAP_WIDTH),
-    .PAR_WRITE(PAR_WRITE_IFMAP),
-    .PAR_READ(1),
-    .DEPTH(IFMAP_BUFFER_DEPTH)
+// Fifo_buffer #(
+//     .DATA_WIDTH(IFMAP_WIDTH),
+//     .PAR_WRITE(PAR_WRITE_IFMAP),
+//     .PAR_READ(1),
+//     .DEPTH(IFMAP_BUFFER_DEPTH)
+// ) IFMap_buffer (
+//     .clk(clk),
+//     .rstn(!rst),
+//     .clear(clear_sum),
+//     .ren(wen_IFMap_src_pad),
+//     .wen(wen_IFMap_buffer),
+//     .din(IFMap_in),
+//     .dout(IFMap_buffer_out),
+//     .empty(IFMap_empty),
+//     .full(IFMap_full)
+// );
+
+FIFOBuf2 #(
+    .ADDR_WIDTH(4),
+    .DATA_WIDTH(16),
+    .DEPTH(8),
+    .PAR_WRITE(4),
+    .PAR_READ(1)
 ) IFMap_buffer (
     .clk(clk),
-    .rstn(!rst),
-    .clear(clear_sum),
-    .ren(wen_IFMap_src_pad),
-    .wen(wen_IFMap_buffer),
+    .rst(rst),
+    .read_enable(wen_IFMap_src_pad),
+    .write_enable(wen_IFMap_buffer),
     .din(IFMap_in),
-    .dout(IFMap_buffer_out),
-    .empty(IFMap_empty),
-    .full(IFMap_full)
+    .ready(IFMap_full),
+    .valid(av_input),
+    .dout(IFMap_buffer_out)
 );
 
+wire ld_start_row;
+wire stride_en;
 
 Read_Controller_IFMap #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
     .STRIDE_SIZE(STRIDE_SIZE),
-    .IFMAP_SIZE(IFMAP_WIDTH)
+    .IFMAP_SIZE(IFMAP_SPAD_ROW)
 ) IFMap_controller (
     .read_pointer(IFMap_read_pointer),
     .write_pointer(IFMap_write_pointer),
     .next_row(next_row),
-    .end_row(IFMap_scratch_pad_out[IFMAP_SPAD_WIDTH - 2]),
+    .end_row(IFMap_scratch_pad_out[IFMAP_WIDTH - 2]),
     .co_filter(co_filter),
     .len_counter(len_counter_out),
-    .av_input(!IFMap_empty),
+    .av_input(av_input),
 
     .av_data(av_data),
     .end_of_row(end_of_row),
     .ld_start_row(ld_start_row),
     .write_counter_en(wen_IFMap_cntr),
-    .stride(stride_IFMap_cntl_out),
+    .stride_en(stride_en),
     .inc_len(inc_len),
     .dec_len(dec_len),
     .write_en_src_pad(wen_IFMap_src_pad)
@@ -113,7 +132,7 @@ ReadAddressGeneratorIF #(
 ) IFMap_address_generator (
     .clk(clk),
     .rst(rst),
-    .stride(stride_IFMap_cntl_out),
+    .stride(stride_reg_out),
     .filter_size(filter_size_out),
     .next_row(next_row),
     .put_data(put_data),

@@ -9,7 +9,7 @@ module main_controller (
     input end_of_filter,
     
     output reg ld_stride,
-    output reg ld_fileSize,
+    output reg ld_filterSize,
     output reg put_data,
     output reg put_filter,
     output reg clear_sum,
@@ -43,7 +43,7 @@ module main_controller (
     end
 
     always @(*) begin
-        {ld_stride ,ld_fileSize ,put_data ,
+        {ld_stride ,ld_filterSize ,put_data ,
         put_filter ,clear_sum ,store_buffer ,
         next_filter ,next_row} = 8'b0;
         case (current_state)
@@ -56,7 +56,7 @@ module main_controller (
             end
 
             INIT_SIZE: begin
-                ld_fileSize = 1'b1;
+                ld_filterSize = 1'b1;
                 ld_stride = 1'b1;
             end
 

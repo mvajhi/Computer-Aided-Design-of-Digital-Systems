@@ -15,16 +15,16 @@ module Read_Controller_IFMap #(
     output end_of_row,
     output ld_start_row,
     output write_counter_en,
-    output [STRIDE_SIZE-1:0] stride,
+    output stride_en,
     output inc_len,
     output dec_len,
     output write_en_src_pad
 );
-    assign av_data = (len_counter == 0);
+    assign av_data = (len_counter != 0);
     assign end_of_row = end_row;
     assign ld_start_row = next_row;
-    assign write_counter_en = av_input && (len_counter < IFMAP_SIZE);
-    assign stride = co_filter;
+    assign write_counter_en = av_input && (len_counter <= IFMAP_SIZE);
+    assign stride_en = co_filter;
     assign inc_len = write_counter_en;
     assign dec_len = next_row;
     assign write_en_src_pad = write_counter_en;

@@ -34,12 +34,17 @@ module ReadAddressGeneratorFilter #(
             point_in_filter <= 0;
         end
         else if (put_filter) begin
-            point_in_filter <= point_in_filter + 1'b1;
+            if (point_in_filter == filter_size - 1) begin
+                point_in_filter <= 0;
+            end
+            else begin
+                point_in_filter <= point_in_filter + 1'b1;
+            end
         end
     end
 
     assign read_pointer = offset + point_in_filter;
 
-    assign co_filter = &point_in_filter;
+    assign co_filter = point_in_filter == filter_size - 1;
 
 endmodule

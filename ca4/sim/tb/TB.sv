@@ -1,7 +1,7 @@
 module TB ();
     reg rst=0;
     reg clk=0;
-    reg [(16 + 2) * 7 - 1:0] data_in;
+    reg [(16 + 2) * 8 - 1:0] data_in;
     reg [16 * 9 - 1:0] filter_in;
     reg start = 1'b1;
     reg [2:0] stride = 2'd2;
@@ -18,18 +18,23 @@ module TB ();
         rst = 1;
         #20 rst = 0;
 
-        data_in = {{2'b10, 16'd1}, {2'b00, 16'd2}, {2'b00, 16'd3},
-                    {2'b00, 16'd3}, {2'b00, 16'd4}, {2'b00, 16'd5}, {2'b01, 16'd6}};
+        data_in = {{2'b01, 16'd7}, {2'b01, 16'd7}, {2'b00, 16'd6}, {2'b00, 16'd5},
+                    {2'b00, 16'd4}, {2'b00, 16'd3}, {2'b00, 16'd2}, {2'b10, 16'd1}};
 
-        filter_in = {{16'd1, 16'd2, 16'd3}, {16'd3, 16'd4, 16'd5}, {16'd5, 16'd6, 16'd7}};
+        filter_in = {{16'd9, 16'd8, 16'd7}, {16'd6, 16'd5, 16'd4}, {16'd3, 16'd2, 16'd1}};
 
         w_data = 1'b1;
         w_filter = 1'b1;
 
-        #10 w_data = 1'b0;
-        #10 w_filter = 1'b0;
+        #20 w_data = 1'b0;
+        w_filter = 1'b0;
+        start = 1'b1;
 
-        #20 $stop;
+        #10 start = 1'b0;
+
+
+
+        #100 $stop;
     end 
 
     topmodule #(
@@ -44,7 +49,7 @@ module TB ();
         .FILTER_SIZE_REG_SIZE(2),
         .FILTER_POINTER_SIZE(4),
         .STRIDE_SIZE(3),
-        .PAR_WRITE_IFMAP(7),
+        .PAR_WRITE_IFMAP(4),
         .PAR_WRITE_FILTER(9)
     ) UUT (
         .clk(clk),

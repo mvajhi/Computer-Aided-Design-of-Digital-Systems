@@ -31,7 +31,7 @@ module topmodule #(
 );
 
     wire ld_stride;
-    wire ld_fileSize;
+    wire ld_filterSize;
     wire put_data;
     wire put_filter;
     wire clear_sum;
@@ -74,7 +74,7 @@ dp #(
     .chip_en(chip_en),
 
     .ld_stride(ld_stride),
-    .ld_fileSize(ld_fileSize),
+    .ld_filterSize(ld_filterSize),
     .put_data(put_data),
     .put_filter(put_filter),
     .clear_sum(clear_sum),
@@ -104,7 +104,7 @@ main_controller fuck_you (
     .end_of_filter(end_of_filter),
 
     .ld_stride(ld_stride),            
-    .ld_fileSize(ld_fileSize),             
+    .ld_filterSize(ld_filterSize),             
     .put_data(put_data),
     .put_filter(put_filter),
     .clear_sum(clear_sum),
