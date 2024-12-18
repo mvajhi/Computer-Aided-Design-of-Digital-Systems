@@ -3,7 +3,7 @@ module Read_Controller_Filter #(
     parameter FILTER_SIZE = 8,
     parameter POINTER_SIZE = 8
 ) (
-    input co_Filter,
+    input co_filter,
     input av_input,
     input [FILTER_SIZE-1:0] Filter_size,
     input [POINTER_SIZE-1:0] write_pointer,
