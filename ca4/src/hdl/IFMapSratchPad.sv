@@ -5,11 +5,11 @@ module IFMapSratchPad #(
     input clk,
     input rst,
     input [IFMAP_SPAD_WIDTH-1:0] din,
-    input [clog2(IFMAP_SPAD_ROW)-1:0] raddr,
-    input [clog2(IFMAP_SPAD_ROW)-1:0] waddr,
+    input [$clog2(IFMAP_SPAD_ROW)-1:0] raddr,
+    input [$clog2(IFMAP_SPAD_ROW)-1:0] waddr,
     input wen,
 
-    output [IFMap_SPAD_WIDTH-1:0] dout
+    output [IFMAP_SPAD_WIDTH-1:0] dout
 );
 
 reg [IFMAP_SPAD_WIDTH-1:0] mem [IFMAP_SPAD_ROW-1:0];
@@ -25,6 +25,6 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-assign dout = ren ? mem[raddr] : 0;
+assign dout = mem[raddr];
 
 endmodule

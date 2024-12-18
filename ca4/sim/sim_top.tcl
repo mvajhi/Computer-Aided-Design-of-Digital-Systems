@@ -12,7 +12,8 @@
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/*.v
+	# vlog 	+acc -incr -source  +define+SIM 	$hdl_path/*.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/*.sv
 
 	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.sv
 	onerror {break}

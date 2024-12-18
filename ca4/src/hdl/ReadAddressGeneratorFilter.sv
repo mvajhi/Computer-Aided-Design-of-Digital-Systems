@@ -11,19 +11,17 @@ module ReadAddressGeneratorFilter #(
     input end_of_filter,
 
     output co_filter,
-    output [POINTER_SIZE-1:0] read_pointer
+    output reg [POINTER_SIZE-1:0] read_pointer
 );
-    reg [clog2(SP_SIZE)-1:0] offset;
+    reg [$clog2(SP_SIZE)-1:0] offset;
     reg [FILTER_SIZE_REG_SIZE-1:0] point_in_filter;
-    reg [clog2(SP_SIZE)-1:0] read_pointer;
 
-    assign read_pointer = offset + point_in_filter;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             offset <= 0;
         end
-        else if (end_of_filter and next_filter) begin
+        else if (end_of_filter && next_filter) begin
             offset <= 0;
         end
         else if (next_filter) begin

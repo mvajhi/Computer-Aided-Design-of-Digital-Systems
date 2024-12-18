@@ -73,10 +73,12 @@ Fifo_buffer #(
     .empty(IFMap_empty)
 );
 
+wire [IFMAP_POINTER_SIZE-1:0] IFMap_scratch_pad_out;
 
 Read_Controller_IFMap #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
-    .STRIDE_SIZE(STRIDE_SIZE)
+    .STRIDE_SIZE(STRIDE_SIZE),
+    .IFMAP_SIZE(IFMAP_WIDTH)
 ) IFMap_controller (
     .read_pointer(IFMap_read_pointer),
     .write_pointer(IFMap_write_pointer),
@@ -96,7 +98,6 @@ Read_Controller_IFMap #(
     .write_en_src_pad(wen_IFMap_src_pad)
 );
 
-wire [IFMAP_POINTER_SIZE-1:0] IFMap_read_pointer;
 
 ReadAddressGeneratorIF #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -113,8 +114,6 @@ ReadAddressGeneratorIF #(
     .read_pointer(IFMap_read_pointer)
 );
 
-wire wen_IFMap_cntr;
-wire [IFMAP_POINTER_SIZE-1:0] IFMap_write_pointer;
 Counter #(.WIDTH(IFMAP_POINTER_SIZE)
 ) IFMap_write_cntr (
     .clk(clk),
@@ -123,11 +122,10 @@ Counter #(.WIDTH(IFMAP_POINTER_SIZE)
     .counter(IFMap_write_pointer)
 );
 
-wire [IFMAP_POINTER_SIZE-1:0] IFMap_scratch_pad_out;
 
 IFMapSratchPad #(
     .IFMAP_SPAD_WIDTH(IFMAP_WIDTH),
-    .IFMAP_SPAD_ROW(IFMAP_SPAD_ROW),
+    .IFMAP_SPAD_ROW(IFMAP_SPAD_ROW)
 ) IFMap_scratch_pad (
     .clk(clk),
     .rst(rst),
@@ -139,13 +137,9 @@ IFMapSratchPad #(
     .dout(IFMap_scratch_pad_out)
 );
 
-wire ld_start_row;
 wire [IFMAP_POINTER_SIZE] start_row_reg_out;
 Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, ld_start_row, IFMap_read_pointer, start_row_reg_out);
 
-wire inc_len;
-wire dec_len;
-wire [IFMAP_POINTER_SIZE-1:0] len_counter_out;
 len_check #(
     .WIDTH(IFMAP_POINTER_SIZE)
 ) lencheck (
@@ -223,14 +217,10 @@ Counter #(.WIDTH(FILTER_POINTER_SIZE)) Filter_write_cntr (
     .counter(Filter_write_pointer)
 );
 
-wire wen_Filter_cntr;
-wire wen_Filter_src_pad;
-wire [FILTER_POINTER_SIZE-1:0] Filter_read_pointer;
-wire [FILTER_POINTER_SIZE-1:0] Filter_write_pointer;
 
 wire [FILTER_WIDTH-1:0] Filter_scratch_pad_out;
 FilterScraratchPad #(
-    .FILTER.WIDTH(FILTER_WIDTH),
+    .FILTER_WIDTH(FILTER_WIDTH),
     .FILTER_ROW(FILTER_SPAD_ROW)
 ) Filter_scratch_pad (
     .clk(clk),
@@ -264,7 +254,7 @@ ReadAddressGeneratorFilter #(
 ////////////////////////////////////////////////////////////////////////////////////////
 
 wire [IFMAP_WIDTH + FILTER_WIDTH - 1:0] mult_out;
-assign = Filter_scratch_pad_out * IFMap_scratch_pad_reg_out;
+assign mult_out = Filter_scratch_pad_out * IFMap_scratch_pad_reg_out;
 
 wire [IFMAP_WIDTH-1:0] out_line1;
 wire stall_line1;
@@ -286,10 +276,11 @@ Pipeline1 #(
     .co_filter_out(co_filter_line1)
 );
 
+wire [IFMAP_WIDTH-1:0] out_line2;
+
 wire [IFMAP_WIDTH-1:0] out_sum;
 assign out_sum = out_line1 + out_line2;
 
-wire [IFMAP_WIDTH-1:0] out_line2;
 wire stall_line2;
 wire done_line2;
 wire co_filter_line2;
@@ -323,7 +314,7 @@ Fifo_buffer #(
     .wen(co_filter_line2),
     .din(out_line2),
 
-    .dout(Psum_out),
+    .dout(Psum_out)
 );
 
 

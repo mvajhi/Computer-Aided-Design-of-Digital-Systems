@@ -5,13 +5,13 @@ module FilterScraratchPad #(
     input clk,
     input rst,
     input [FILTER_WIDTH-1:0] din,
-    input [clog2(FILTER_ROW)-1:0] raddr,
-    input [clog2(FILTER_ROW)-1:0] waddr,
+    input [$clog2(FILTER_ROW)-1:0] raddr,
+    input [$clog2(FILTER_ROW)-1:0] waddr,
     input ren,
     input wen,
     input chip_en,
 
-    output [FILTER_WIDTH-1:0] dout
+    output reg [FILTER_WIDTH-1:0] dout
 );
 
 reg [FILTER_WIDTH-1:0] mem [FILTER_ROW-1:0];

@@ -16,7 +16,7 @@ module main_controller (
     output reg store_buffer,
     output reg next_filter,
     output reg next_row
-)
+);
     parameter IDLE = 2'b00;
     parameter START = 2'b01;
     parameter INIT_SIZE = 2'b10;

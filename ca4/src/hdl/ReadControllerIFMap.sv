@@ -1,6 +1,7 @@
 module Read_Controller_IFMap #(
     parameter POINTER_SIZE = 8,
-    parameter STRIDE_SIZE = 3
+    parameter STRIDE_SIZE = 3,
+    parameter IFMAP_SIZE = 16
 ) (
     input [POINTER_SIZE-1:0] read_pointer,
     input [POINTER_SIZE-1:0] write_pointer,
