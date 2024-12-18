@@ -1,6 +1,5 @@
 module ReadAddressGeneratorIF #(
     parameter POINTER_SIZE = 8,
-    parameter SP_SIZE = 8,
     parameter FILTER_SIZE_REG_SIZE = 8,
     parameter STRIDE_SIZE = 3
 ) (

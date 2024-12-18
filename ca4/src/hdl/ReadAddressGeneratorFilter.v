@@ -13,9 +13,9 @@ module ReadAddressGeneratorFilter #(
     output co_filter,
     output [POINTER_SIZE-1:0] read_pointer
 );
-    reg [SP_SIZE-1:0] offset;
+    reg [clog2(SP_SIZE)-1:0] offset;
     reg [FILTER_SIZE_REG_SIZE-1:0] point_in_filter;
-    reg [SP_SIZE-1:0] read_pointer;
+    reg [clog2(SP_SIZE)-1:0] read_pointer;
 
     assign read_pointer = offset + point_in_filter;
 
