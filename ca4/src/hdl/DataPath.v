@@ -2,7 +2,7 @@ module dp #(
     parameter IFMAP_BUFFER_WIDTH = 18,
     parameter FILTER_BUFFER_DEPTH = 16,
     parameter FILTER_WIDTH = 8,
-    parameter FILTER_SIZE = 8,
+    parameter FILTER_SIZE_REG_SIZE = 8,
     parameter STRIDE_SIZE = 3,
     parameter PAR_WRITE_IFMAP = 1,
     parameter PAR_WRITE_FILTER = 1
@@ -11,7 +11,7 @@ module dp #(
     input rst,
     input start,
     input [STRIDE_SIZE-1:0] stride,
-    input [FILTER_SIZE-1:0] filter_size,
+    input [FILTER_SIZE_REG_SIZE-1:0] filter_size,
     input [IFMAP_BUFFER_WIDTH-1:0] IFMap_in,
     input [FILTER_WIDTH-1:0] Filter_in,
 
@@ -39,10 +39,10 @@ module dp #(
 );
 
 wire [STRIDE_SIZE-1:0] stride_reg_out;
-wire [FILTER_SIZE-1:0] filter_size_out;
+wire [FILTER_SIZE_REG_SIZE-1:0] filter_size_out;
 
 Register #(STRIDE_SIZE) stride_reg(clk, rst, ld_stride, stride, stride_reg_out);
-Register #(FILTER_SIZE) filter_reg(clk, rst, ld_fileSize, filter_size, filter_size_out);
+Register #(FILTER_SIZE_REG_SIZE) filter_reg(clk, rst, ld_fileSize, filter_size, filter_size_out);
 
 // IFMap
 

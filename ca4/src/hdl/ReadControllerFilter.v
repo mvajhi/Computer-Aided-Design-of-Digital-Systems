@@ -1,11 +1,11 @@
 module Read_Controller_Filter #(
     parameter SP_SIZE = 8,
-    parameter FILTER_SIZE = 8,
+    parameter FILTER_SIZE_REG_SIZE = 8,
     parameter POINTER_SIZE = 8
 ) (
     input co_filter,
     input av_input,
-    input [FILTER_SIZE-1:0] filter_size,
+    input [FILTER_SIZE_REG_SIZE-1:0] filter_size,
     input [POINTER_SIZE-1:0] write_pointer,
     input [POINTER_SIZE-1:0] read_pointer,
     
