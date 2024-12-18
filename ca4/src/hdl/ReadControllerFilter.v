@@ -1,14 +1,25 @@
-module Read_Controller_Filter(
+module Read_Controller_Filter #(
+    parameter SP_size = 8,
+    parameter FILTER_SIZE = 8,
+    parameter POINTER_SIZE = 8
+) (
     input co_Filter,
     input av_input,
-    input Filter_size,
-    input write_pointer,
-    input read_pointer,
+    input [FILTER_SIZE-1:0] Filter_size,
+    input [POINTER_SIZE-1:0] write_pointer,
+    input [POINTER_SIZE-1:0] read_pointer,
     
     output write_en_src_pad,
     output write_counter_en,
     output end_of_filter,
     output av_filter
 );
+    wire en;
+
+    assign en = av_input && (write_pointer <= (SP_size - Filter_size));
+    assign write_en_src_pad = en;
+    assign write_counter_en = en;
+    assign end_of_filter = (read_pointer == (SP_size - (SP_size % Filter_size)));
+    assign av_filter = (read_pointer < write_pointer);
 
 endmodule
