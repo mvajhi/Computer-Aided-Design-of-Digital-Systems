@@ -64,7 +64,7 @@ Fifo_buffer #(
     .DEPTH(IFMAP_BUFFER_DEPTH)
 ) IFMap_buffer (
     .clk(clk),
-    .rstn(rst),
+    .rstn(!rst),
     .clear(clear_sum),
     .ren(wen_IFMap_src_pad),
     .wen(wen_IFMap_buffer),
@@ -184,7 +184,7 @@ Fifo_buffer #(
     .DEPTH(FILTER_BUFFER_DEPTH)
 ) Filter_buffer (
     .clk(clk),
-    .rstn(rst),
+    .rstn(!rst),
     .clear(clear_sum),
     .ren(wen_Filter_src_pad),
     .wen(wen_Filter_buffer),
@@ -308,7 +308,7 @@ Fifo_buffer #(
     .DEPTH(PSUM_DEPTH)
 ) Sum_buffer (
     .clk(clk),
-    .rstn(rst),
+    .rstn(!rst),
     .clear(clear_sum),
     .ren(ren_Psum_buffer),
     .wen(co_filter_line2),
