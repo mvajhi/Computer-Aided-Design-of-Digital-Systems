@@ -3,11 +3,9 @@ module len_check #(parameter WIDTH = 4) (
     input wire rst,
     input wire up_enable,
     input wire down_enable,
-    output empty,
-    output full
+    output reg [WIDTH-1:0] count;
 );
 
-    reg [WIDTH-1:0] count;
     wire [WIDTH-1:0] count_inc = up_enable ? count + 1'b1 : count;
     wire [WIDTH-1:0] count_dec = down_enable ? count_inc - 1b'1 : count_inc;
 
@@ -18,8 +16,5 @@ module len_check #(parameter WIDTH = 4) (
             count <= count_dec;
         end
     end
-
-    assign empty = (count == 0);
-    assign full = (count == (2**WIDTH - 1));
 
 endmodule

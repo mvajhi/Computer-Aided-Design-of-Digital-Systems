@@ -1,6 +1,7 @@
 module dp #(
     parameter IFMAP_BUFFER_WIDTH = 18,
     parameter IFMAP_POINTER_SIZE = 8,
+    parameter IFMAP_SPAD_ROW = 12,
     parameter FILTER_BUFFER_DEPTH = 16,
     parameter FILTER_WIDTH = 8,
     parameter FILTER_SIZE_REG_SIZE = 8,
@@ -16,8 +17,8 @@ module dp #(
     input [IFMAP_BUFFER_WIDTH-1:0] IFMap_in,
     input [FILTER_WIDTH-1:0] Filter_in,
 
-    input wen_IFMap,
-    input wen_Filter,
+    input wen_IFMap_buffer,
+    input wen_Filter_buffer,
 
     // controller
     input ld_stride,
@@ -59,8 +60,8 @@ Fifo_buffer #(
     .clk(clk),
     .rstn(rst),
     .clear(clear_sum),
-    .ren(/**/),
-    .wen(wen_IFMap),
+    .ren(wen_IFMap_src_pad),
+    .wen(wen_IFMap_buffer),
     .din(IFMap_in),
     .dout(IFMap_buffer_out),
     .empty(IFMap_empty)
@@ -71,22 +72,22 @@ Read_Controller_IFMap #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
     .STRIDE_SIZE(STRIDE_SIZE)
 ) IFMap_controller (
-    .read_pointer(/**/),
-    .write_pointer(/**/),
+    .read_pointer(IFMap_read_pointer),
+    .write_pointer(IFMap_write_pointer),
     .next_row(next_row),
-    .end_row(IFMap_buffer_out[IFMAP_BUFFER_WIDTH-2]),
+    .end_row(IFMap_scratch_pad_out[IFMAP_SPAD_WIDTH - 2]),
     .co_filter(co_filter),
-    .len_counter(/**/),
+    .len_counter(len_counter_out),
     .av_input(!IFMap_empty),
 
     .av_data(av_data),
     .end_of_row(end_of_row),
-    .ld_start_row(/**/),
-    .write_counter_en(/**/),
+    .ld_start_row(ld_start_row),
+    .write_counter_en(wen_IFMap_cntr),
     .stride(stride_IFMap_cntl_out),
-    .inc_len(/**/),
-    .dec_len(/**/),
-    .write_en_src_pad(/**/)
+    .inc_len(inc_len),
+    .dec_len(dec_len),
+    .write_en_src_pad(wen_IFMap_src_pad)
 );
 
 wire [IFMAP_POINTER_SIZE-1:0] IFMap_read_pointer;
@@ -106,15 +107,54 @@ ReadAddressGeneratorIF #(
     .read_pointer(IFMap_read_pointer)
 );
 
+wire wen_IFMap_cntr;
 wire [IFMAP_POINTER_SIZE-1:0] IFMap_write_pointer;
-
 Counter #(.WIDTH(IFMAP_POINTER_SIZE)
 ) IFMap_write_cntr (
     .clk(clk),
     .rst(rst),
-    .en(/**/),
+    .en(wen_IFMap_cntr),
     .counter(IFMap_write_pointer)
 );
+
+wire [IFMAP_POINTER_SIZE-1:0] IFMap_scratch_pad_out;
+
+IFMapSratchPad #(
+    .IFMAP_SPAD_WIDTH(IFMAP_BUFFER_WIDTH),
+    .IFMAP_SPAD_ROW(IFMAP_SPAD_ROW),
+) IFMap_scratch_pad (
+    .clk(clk),
+    .rst(rst),
+    .din(IFMap_buffer_out),  
+    .raddr(IFMap_read_pointer),
+    .waddr(IFMap_write_pointer),
+    .wen(wen_IFMap_src_pad),
+
+    .dout(IFMap_scratch_pad_out)
+);
+
+wire ld_start_row;
+wire [IFMAP_POINTER_SIZE] start_row_reg_out;
+Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, ld_start_row, IFMap_read_pointer, start_row_reg_out);
+
+wire inc_len;
+wire dec_len;
+wire [IFMAP_POINTER_SIZE-1:0] len_counter_out;
+len_check #(
+    .WIDTH(IFMAP_POINTER_SIZE)
+) lencheck (
+    .clk(clk),
+    .rst(rst),
+    .up_enable(inc_len),
+    .down_enable(dec_len),
+
+    .count(len_counter_out)
+);
+
+wire [IFMAP_BUFFER_WIDTH-3:0] IFMap_scratch_pad_reg_out;
+Register #(IFMAP_BUFFER_WIDTH-2) temp_out_scratch_pad(clk, rst, 1'b1, IFMap_scratch_pad_out[IFMAP_SPAD_WIDTH-3:0], IFMap_scratch_pad_reg_out);
+
+/////////////////////////////////
 
 
 
