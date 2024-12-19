@@ -36,7 +36,7 @@ module TB ();
 
 
 
-        #400 $stop;
+        #2000 $stop;
     end 
 
     topmodule #(

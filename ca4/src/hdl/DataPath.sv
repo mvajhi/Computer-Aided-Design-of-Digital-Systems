@@ -100,6 +100,11 @@ FIFOBuf2 #(
 
 wire ld_start_row;
 wire stride_en;
+wire [IFMAP_POINTER_SIZE-1:0] start_row_reg_out;
+Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-1], IFMap_read_pointer, start_row_reg_out);
+
+wire [IFMAP_POINTER_SIZE-1:0] end_row_reg_out;
+Register #(IFMAP_POINTER_SIZE) end_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-2], IFMap_read_pointer, end_row_reg_out);
 
 Read_Controller_IFMap #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -113,6 +118,8 @@ Read_Controller_IFMap #(
     .co_filter(co_filter),
     .len_counter(len_counter_out),
     .av_input(av_input),
+    .start_row_addr(start_row_reg_out),
+    .start_row_bit(IFMap_scratch_pad_out[IFMAP_WIDTH - 1] && (IFMap_read_pointer > end_row_reg_out)),
 
     .av_data(av_data),
     .end_of_row(end_of_row),
@@ -124,11 +131,6 @@ Read_Controller_IFMap #(
     .write_en_src_pad(wen_IFMap_src_pad)
 );
 
-wire [IFMAP_POINTER_SIZE-1:0] start_row_reg_out;
-Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-1], IFMap_read_pointer, start_row_reg_out);
-
-wire [IFMAP_POINTER_SIZE-1:0] end_row_reg_out;
-Register #(IFMAP_POINTER_SIZE) end_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-2], IFMap_read_pointer, end_row_reg_out);
 
 ReadAddressGeneratorIF #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -179,6 +181,8 @@ len_check #(
     .rst(rst),
     .up_enable(inc_len),
     .down_enable(dec_len),
+    .start_row_addr(start_row_reg_out),
+    .end_row_addr(end_row_reg_out),
 
     .count(len_counter_out)
 );
