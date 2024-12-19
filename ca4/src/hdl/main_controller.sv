@@ -48,16 +48,17 @@ module main_controller (
         next_filter ,next_row} = 8'b0;
         case (current_state)
             IDLE: begin
-                // do nothing
+                clear_sum = 1'b1;
             end
 
             START: begin
-                // do nothing
+                clear_sum = 1'b1;
             end
 
             INIT_SIZE: begin
                 ld_filterSize = 1'b1;
                 ld_stride = 1'b1;
+                clear_sum = 1'b1;
             end
 
             AVAILABLE: begin

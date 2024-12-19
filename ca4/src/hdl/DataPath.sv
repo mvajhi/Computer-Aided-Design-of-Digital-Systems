@@ -191,6 +191,7 @@ wire [IFMAP_WIDTH-3:0] IFMap_scratch_pad_reg_out;
 wire stall_line0;
 wire done_line0;
 wire co_filter_line0;
+wire clear_line0;
 Pipeline1 #(
     .DATA_WIDTH(IFMAP_WIDTH - 2)
 ) line0 (
@@ -200,7 +201,9 @@ Pipeline1 #(
     .done_in(end_of_row && end_of_filter),
     .in(IFMap_scratch_pad_out[IFMAP_WIDTH - 3:0]),
     .co_filter(co_filter),
+    .clear(clear_sum),
 
+    .clear_out(clear_line0),
     .out(IFMap_scratch_pad_reg_out),
     .stall_out(stall_line0),
     .done_out(done_line0),
@@ -324,6 +327,8 @@ wire [IFMAP_WIDTH-3:0] out_line1;
 wire stall_line1;
 wire done_line1;
 wire co_filter_line1;
+wire clear_line1;
+
 Pipeline1 #(
     .DATA_WIDTH(IFMAP_WIDTH - 2)
 ) line1 (
@@ -333,7 +338,9 @@ Pipeline1 #(
     .done_in(done_line0),
     .in(mult_out[IFMAP_WIDTH - 3:0]),
     .co_filter(co_filter_line0),
+    .clear(clear_line1),
 
+    .clear_out(clear_line1),
     .out(out_line1),
     .stall_out(stall_line1),
     .done_out(done_line1),
@@ -343,9 +350,8 @@ Pipeline1 #(
 wire [IFMAP_WIDTH-3:0] out_line2;
 
 wire [IFMAP_WIDTH-3:0] out_sum;
-assign out_sum = out_line1 + out_line2;
+assign out_sum = clear_line1 ? out_line1 : out_line1 + out_line2;
 
-wire stall_line2;
 wire done_line2;
 wire co_filter_line2;
 Pipeline2 #(
@@ -359,7 +365,6 @@ Pipeline2 #(
     .co_filter(co_filter_line1),
 
     .out(out_line2),
-    .stall_out(stall_line2),
     .done_out(done_line2),
     .co_filter_out(co_filter_line2)
 );
