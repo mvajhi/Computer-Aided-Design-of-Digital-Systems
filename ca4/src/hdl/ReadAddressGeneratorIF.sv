@@ -10,6 +10,7 @@ module ReadAddressGeneratorIF #(
     input next_row,
     input put_data,
     input [POINTER_SIZE-1:0] start_row,
+    input [POINTER_SIZE-1:0] end_row,
     input end_of_row,
 
     output [POINTER_SIZE-1:0] read_pointer

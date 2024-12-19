@@ -16,10 +16,10 @@ module Read_Controller_Filter #(
 );
     wire en;
 
-    assign en = av_input && (write_pointer <= (SP_SIZE - filter_size));
+    assign en = av_input && (write_pointer <= (SP_SIZE - (SP_SIZE % filter_size)) - 1);
     assign write_en_src_pad = en;
     assign write_counter_en = en;
-    assign end_of_filter = (read_pointer == (SP_SIZE - (SP_SIZE % filter_size)));
+    assign end_of_filter = (read_pointer == (SP_SIZE - (SP_SIZE % filter_size)) - 1);
     assign av_filter = (read_pointer < write_pointer);
 
 endmodule

@@ -125,7 +125,10 @@ Read_Controller_IFMap #(
 );
 
 wire [IFMAP_POINTER_SIZE-1:0] start_row_reg_out;
-Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, ld_start_row, IFMap_read_pointer, start_row_reg_out);
+Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-1], IFMap_read_pointer, start_row_reg_out);
+
+wire [IFMAP_POINTER_SIZE-1:0] end_row_reg_out;
+Register #(IFMAP_POINTER_SIZE) end_row_reg (clk, rst, IFMap_scratch_pad_out[IFMAP_WIDTH-2], IFMap_read_pointer, end_row_reg_out);
 
 ReadAddressGeneratorIF #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -139,6 +142,7 @@ ReadAddressGeneratorIF #(
     .next_row(next_row),
     .put_data(put_data),
     .start_row(start_row_reg_out),
+    .end_row(end_row_reg_out),
     .end_of_row(end_of_row),
 
     .read_pointer(IFMap_read_pointer)
@@ -250,7 +254,7 @@ wire [FILTER_POINTER_SIZE-1:0] Filter_write_pointer;
 wire [FILTER_POINTER_SIZE-1:0] Filter_read_pointer;
 
 Read_Controller_Filter #(
-    .SP_SIZE(FILTER_WIDTH),
+    .SP_SIZE(FILTER_SPAD_ROW),
     .FILTER_SIZE_REG_SIZE(FILTER_SIZE_REG_SIZE),
     .POINTER_SIZE(FILTER_POINTER_SIZE)
 ) Filter_controller (

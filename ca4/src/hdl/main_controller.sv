@@ -67,6 +67,7 @@ module main_controller (
                store_buffer = co_filter;
                next_filter = end_of_row;
                next_row = end_of_filter && end_of_row;
+            //    next_row = end_of_filter;
             end
         endcase
     end
