@@ -347,13 +347,14 @@ Pipeline1 #(
     .co_filter_out(co_filter_line1)
 );
 
-wire [IFMAP_WIDTH-3:0] out_line2;
-
-wire [IFMAP_WIDTH-3:0] out_sum;
-assign out_sum = clear_line1 ? out_line1 : out_line1 + out_line2;
-
 wire done_line2;
 wire co_filter_line2;
+wire [IFMAP_WIDTH-3:0] out_line2;
+wire stall_line2;
+
+wire [IFMAP_WIDTH-3:0] out_sum;
+assign out_sum = (clear_line1 || co_filter_line2) ? out_line1 : out_line1 + out_line2;
+
 Pipeline2 #(
     .DATA_WIDTH(IFMAP_WIDTH-2)
 ) line2 (
@@ -366,7 +367,8 @@ Pipeline2 #(
 
     .out(out_line2),
     .done_out(done_line2),
-    .co_filter_out(co_filter_line2)
+    .co_filter_out(co_filter_line2),
+    .stall_out(stall_line2)
 );
 
 wire sum_empty, sum_full;
@@ -403,7 +405,7 @@ FIFOBuf2 #(
     .clk(clk),
     .rst(rst),
     .read_enable(ren_Psum_buffer),
-    .write_enable(co_filter_line2),
+    .write_enable(co_filter_line2 && !stall_line2),
     .din(out_line2),
     .ready(ready_sum),
     .valid(valid_sum),

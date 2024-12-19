@@ -44,33 +44,39 @@ module main_controller (
 
     always @(*) begin
         {ld_stride ,ld_filterSize ,put_data ,
-        put_filter ,clear_sum ,store_buffer ,
+        put_filter ,store_buffer ,
         next_filter ,next_row} = 8'b0;
         case (current_state)
             IDLE: begin
-                clear_sum = 1'b1;
             end
 
             START: begin
-                clear_sum = 1'b1;
             end
 
             INIT_SIZE: begin
                 ld_filterSize = 1'b1;
                 ld_stride = 1'b1;
-                clear_sum = 1'b1;
             end
 
             AVAILABLE: begin
                put_data = av_data && av_filter;
                put_filter = av_data && av_filter;
-               clear_sum = co_filter;
                store_buffer = co_filter;
                next_filter = end_of_row;
                next_row = end_of_filter && end_of_row;
             //    next_row = end_of_filter;
             end
         endcase
+    end
+
+    always @(posedge clk) begin
+        if (current_state == IDLE) begin
+            clear_sum <= 1'b1;
+        end
+        if (clear_sum && put_data) begin
+            clear_sum <= 1'b0;
+        end
+            
     end
 
 
