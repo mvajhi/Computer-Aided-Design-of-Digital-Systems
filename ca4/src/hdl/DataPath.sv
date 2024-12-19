@@ -124,6 +124,8 @@ Read_Controller_IFMap #(
     .write_en_src_pad(wen_IFMap_src_pad)
 );
 
+wire [IFMAP_POINTER_SIZE-1:0] start_row_reg_out;
+Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, ld_start_row, IFMap_read_pointer, start_row_reg_out);
 
 ReadAddressGeneratorIF #(
     .POINTER_SIZE(IFMAP_POINTER_SIZE),
@@ -136,6 +138,8 @@ ReadAddressGeneratorIF #(
     .filter_size(filter_size_out),
     .next_row(next_row),
     .put_data(put_data),
+    .start_row(start_row_reg_out),
+    .end_of_row(end_of_row),
 
     .read_pointer(IFMap_read_pointer)
 );
@@ -163,8 +167,6 @@ IFMapSratchPad #(
     .dout(IFMap_scratch_pad_out)
 );
 
-wire [IFMAP_POINTER_SIZE] start_row_reg_out;
-Register #(IFMAP_POINTER_SIZE) start_row_reg (clk, rst, ld_start_row, IFMap_read_pointer, start_row_reg_out);
 
 len_check #(
     .WIDTH(IFMAP_POINTER_SIZE)
@@ -222,8 +224,12 @@ wire Filter_empty, Filter_full;
 //     .full(Filter_full)
 // );
 
+wire ready_Filter, valid_Filter;
+assign Filter_empty = !ready_Filter;
+assign Filter_full = !valid_Filter;
+
 FIFOBuf2 #(
-    .ADDR_WIDTH($clog2(FILTER_BUFFER_DEPTH)),
+    .ADDR_WIDTH(50),
     .DATA_WIDTH(FILTER_WIDTH),
     .DEPTH(FILTER_BUFFER_DEPTH),
     .PAR_WRITE(PAR_WRITE_FILTER),
@@ -234,8 +240,8 @@ FIFOBuf2 #(
     .read_enable(wen_Filter_src_pad),
     .write_enable(wen_Filter_buffer),
     .din(Filter_in),
-    .ready(Filter_full),
-    .valid(!Filter_empty),
+    .ready(ready_Filter),
+    .valid(valid_Filter),
     .dout(Filter_buffer_out)
 );
 
@@ -249,7 +255,7 @@ Read_Controller_Filter #(
     .POINTER_SIZE(FILTER_POINTER_SIZE)
 ) Filter_controller (
     .co_filter(co_filter),
-    .av_input(!Filter_empty),
+    .av_input(valid_Filter),
     .filter_size(filter_size_out),
     .write_pointer(Filter_write_pointer),
     .read_pointer(Filter_read_pointer),
@@ -370,8 +376,12 @@ wire sum_empty, sum_full;
 //     .full(sum_full)
 // );
 
+wire ready_sum, valid_sum;
+assign sum_empty = !ready_sum;
+assign sum_full = !valid_sum;
+
 FIFOBuf2 #(
-    .ADDR_WIDTH($clog2(IFMAP_WIDTH-2)),
+    .ADDR_WIDTH(50),
     .DATA_WIDTH(IFMAP_WIDTH-2),
     .DEPTH(PSUM_DEPTH),
     .PAR_WRITE(1),
@@ -382,8 +392,8 @@ FIFOBuf2 #(
     .read_enable(ren_Psum_buffer),
     .write_enable(co_filter_line2),
     .din(out_line2),
-    .ready(!sum_full),
-    .valid(!sum_empty),
+    .ready(ready_sum),
+    .valid(valid_sum),
     .dout(Psum_out)
 );
 

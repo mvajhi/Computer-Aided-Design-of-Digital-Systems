@@ -23,7 +23,7 @@ module Read_Controller_IFMap #(
     assign av_data = (len_counter != 0);
     assign end_of_row = end_row;
     assign ld_start_row = next_row;
-    assign write_counter_en = av_input && (len_counter <= IFMAP_SIZE);
+    assign write_counter_en = av_input && (len_counter < IFMAP_SIZE);
     assign stride_en = co_filter;
     assign inc_len = write_counter_en;
     assign dec_len = next_row;
