@@ -38,15 +38,15 @@ module TB ();
         #20 w_data = 1'b0;
         w_filter = 1'b0;
 
-        #100 w_data = 1'b1;
-        #20 w_data = 1'b0;
+        // #10 w_data = 1'b1; // FIFOBuff dosen't sopport this
+        // #20 w_data = 1'b0;
 
 
         #2000 $stop;
     end 
 
     topmodule #(
-        .PSUM_DEPTH(30),
+        .PSUM_DEPTH(64),
         .IFMAP_WIDTH(18),
         .IFMAP_BUFFER_DEPTH(16),
         .IFMAP_POINTER_SIZE(4),
