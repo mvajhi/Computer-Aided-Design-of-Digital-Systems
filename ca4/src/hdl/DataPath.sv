@@ -338,7 +338,7 @@ Pipeline1 #(
     .done_in(done_line0),
     .in(mult_out[IFMAP_WIDTH - 3:0]),
     .co_filter(co_filter_line0),
-    .clear(clear_line1),
+    .clear(clear_line0),
 
     .clear_out(clear_line1),
     .out(out_line1),
