@@ -60,6 +60,22 @@ module design_controller
                     clear_regs = psum_done | stride_count_flag;
                     reset_all = start;
                 end
+
+                MOD_1: begin
+
+                end
+
+                MOD_2: begin
+
+                end
+
+                MOD_3: begin
+
+                end
+
+                JUST_ADD: begin
+
+                end
             endcase
         end
 endmodule
