@@ -23,6 +23,9 @@ module design_datapath #(
     input wire [IF_SCRATCH_WIDTH + 1:0] IF_buf_inp,
     input wire [FILT_SCRATCH_WIDTH - 1:0] filt_buf_inp,
     
+    input wire IF_mux_sel,
+    input wire filter_mux_sel,
+
     input wire reset_accumulation,
     
     input wire accumulate_input_psum,
@@ -126,6 +129,17 @@ module design_datapath #(
     );
 
     // IF Scratchpad
+    wire [IF_ADDR_LEN - 1:0] IF_raddr_mux_out, next_IF_raddr;
+    assign next_IF_raddr = IF_raddr + 1; //????
+    Mux2to1 #(
+        .WIDTH(IF_ADDR_LEN)
+    ) IF_raddr_mux (
+        .a(IF_waddr),
+        .b(next_IF_raddr),
+        .sel(IF_mux_sel),
+        .c(IF_raddr_mux_out)
+    );
+
     IF_scratch #(
         .ADDR_LEN(IF_ADDR_LEN),
         .SCRATCH_DEPTH(IF_SCRATCH_DEPTH),
@@ -135,12 +149,23 @@ module design_datapath #(
         .rst(rst),
         .wen(IF_scratch_wen),
         .waddr(IF_waddr),
-        .raddr(IF_raddr),
+        .raddr(IF_raddr_mux_out),
         .din(IF_buf_inp[IF_SCRATCH_WIDTH - 1:0]),
         .dout(IF_scratch_out)
     );
 
     // Filter Scratchpad
+    wire [FILT_ADDR_LEN - 1:0] filt_raddr_mux_out, next_filt_raddr;
+    assign next_filt_raddr = filt_raddr + 1;
+    Mux2to1 #(
+        .WIDTH(FILT_ADDR_LEN)
+    ) filt_raddr_mux (
+        .a(filt_raddr),
+        .b(next_filt_raddr),
+        .sel(filter_mux_sel),
+        .c(filt_raddr_mux_out)
+    );
+
     filter_scratch #(
         .ADDR_LEN(FILT_ADDR_LEN),
         .SCRATCH_DEPTH(FILT_SCRATCH_DEPTH),
@@ -152,7 +177,7 @@ module design_datapath #(
         .wen(filt_scratch_wen),
         .ren(read_from_scratch),
         .waddr(filt_waddr),
-        .raddr(filt_raddr),
+        .raddr(filt_raddr_mux_out),
         .din(filt_buf_inp),
         .dout(filt_scratch_out)
     );

@@ -1,4 +1,4 @@
-module Register(clk, rst, ld_data, ParIn, data);
+module Register_mod(clk, rst, ld_data, ParIn, data);
     parameter WIDTH = 4;
     input clk, rst, ld_data;
     input [WIDTH - 1 :0] ParIn;
