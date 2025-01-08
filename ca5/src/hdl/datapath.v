@@ -1,4 +1,8 @@
 module design_datapath #(
+    parameter P_SUM_ADDR_LEN,
+    parameter P_SUM_SCRATCH_DEPTH,
+    parameter P_SUM_SCRATCH_WIDTH,
+    parameter P_SUM_SCRATCH_DEPTH,
     parameter FILT_ADDR_LEN,
     parameter IF_ADDR_LEN,
     parameter IF_SCRATCH_DEPTH,
@@ -18,6 +22,12 @@ module design_datapath #(
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [IF_SCRATCH_WIDTH + 1:0] IF_buf_inp,
     input wire [FILT_SCRATCH_WIDTH - 1:0] filt_buf_inp,
+    
+    input wire reset_accumulation,
+    
+    input wire accumulate_input_psum,
+    input wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] p_sum_input,
+    
     output wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] module_outval,
     output wire IF_buf_read,
     output wire filt_buf_read,
@@ -36,7 +46,7 @@ module design_datapath #(
     wire [IF_SCRATCH_WIDTH - 1:0] IF_scratch_out, IF_scratch_reg_out;
     wire [FILT_SCRATCH_WIDTH - 1:0] filt_scratch_out;
     wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] mult_inp, mult_reg_out;
-    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] add_inp, add_reg_out;
+    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] add_inp;
 
     // IF Read Module
     IF_read_module #(
@@ -180,24 +190,53 @@ module design_datapath #(
         .msb(dum2)
     );
 
-    // Adder Register
-    assign add_inp = add_reg_out + mult_reg_out;
 
-    Register #(
-        .SIZE(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1)
-    ) add_reg (
-        .clk(clk),
-        .rst(rst | regs_clr),
-        .right_shen(1'b0),
-        .left_shen(1'b0),
-        .ser_in(1'b0),
-        .outval(add_reg_out),
-        .inval(add_inp),
-        .ld_en(read_from_scratch),
-        .msb(dum3)
+    // Accumulation
+    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] accumulation_mux_out;
+    Mux2to1 #(
+        .WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
+    ) p_sum_mux (
+        .a(mult_reg_out),
+        .b(p_sum_input),
+        .sel(accumulate_input_psum),
+        .c(accumulation_mux_out)
     );
 
+    // Adder Register
+    assign add_inp = p_sum_mux_out + mult_reg_out;
+
     // Output Assignment
-    assign module_outval = add_reg_out;
+    assign module_outval = add_inp;
+
+    ////////////////////////////////////////////////
+
+    // P_Sum Scratch pad
+    wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_scratch_out;
+    P_Sum_Registers #(
+        .ADDR_LEN(P_SUM_ADDR_LEN),
+        .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
+        .SCRATCH_WIDTH(P_SUM_SCRATCH_WIDTH)
+    ) p_sum_scratch (
+        .clk(clk),
+        .rst(rst),
+        .wen(/**/),
+        .waddr(/**/),
+        .raddr(/**/),
+        .din(add_inp),
+        .dout(p_sum_scratch_out)
+    );
+
+    // P_Sum Mux
+    wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_mux_out;
+    Mux2to1 #(
+        .WIDTH(P_SUM_SCRATCH_WIDTH)
+    ) p_sum_mux (
+        .a({P_SUM_SCRATCH_WIDTH{1'b0}}),
+        .b(p_sum_scratch_out),
+        .sel(reset_accumulation),
+        .c(p_sum_mux_out)
+    );
+
+
 
 endmodule
