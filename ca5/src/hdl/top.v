@@ -94,6 +94,7 @@ Fifo_buffer #(
 
 // P_sum Buffer
 wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_out;
+wire P_sum_buff_empty, P_sum_buff_full;
 Fifo_buffer #(
     .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH),
     .PAR_WRITE(P_SUM_PAR_WRITE),
@@ -107,8 +108,8 @@ Fifo_buffer #(
     .wen(1'b1),
     .din(P_sum_buff_inp),
     .dout(P_sum_buff_out),
-    .full(),
-    .empty()
+    .full(P_sum_buff_full),
+    .empty(P_sum_buff_empty)
 ); 
 
 // Output Buffer
@@ -122,7 +123,7 @@ Fifo_buffer #(
     .rstn(~rst),
     .clear(1'b0),
     .ren(outbuf_ren),
-    .wen(outbuf_write),
+    .wen(accumulate_input_psum),
     .din(module_outval),
     .dout(outbuf_dout),
     .full(outbuf_full),
@@ -200,6 +201,7 @@ design_controller #(
 
     .usage_stride_pos_ld(usage_stride_pos_ld),
     .reset_Filter(reset_Filter),
+    .psum_empty(psum_empty),
 
     .reset_all(reset_all),
     .IF_read_start(IF_read_start),
@@ -207,7 +209,8 @@ design_controller #(
     .clear_regs(regs_clr),
     .start_rd_gen(start_rd_gen),
     .mod(calc_mod),
-    .just_add_flag(just_add_flag)
+    .just_add_flag(just_add_flag),
+
 );
 
 endmodule

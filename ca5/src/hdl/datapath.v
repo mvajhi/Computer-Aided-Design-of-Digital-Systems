@@ -286,7 +286,7 @@ module design_datapath #(
         .clk(clk),
         .rstn(~rst),
         .clear(1'b0), // TODO 0
-        .ren(1'b0), // TODO 0
+        .ren(psum_ren || accumulate_input_psum), // TODO 0
         .wen(read_from_scratch && ~outbuf_write && ~regs_clr),
         .freeze(~regs_clr),
         .same_addr(1'b1), // 1
