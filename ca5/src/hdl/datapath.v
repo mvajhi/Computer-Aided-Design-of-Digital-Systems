@@ -258,9 +258,9 @@ module design_datapath #(
     ) p_sum_scratch (
         .clk(clk),
         .rst(rst),
-        .wen(/**/),
-        .waddr(/**/),
-        .raddr(/**/),
+        .wen(read_from_scratch),
+        .waddr(0),
+        .raddr(0),
         .din(add_inp),
         .dout(p_sum_scratch_out)
     );
