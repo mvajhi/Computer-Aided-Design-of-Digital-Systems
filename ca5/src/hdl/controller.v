@@ -10,7 +10,8 @@ module design_controller
             input wire [1:0] mod,
             output reg psum_clear, psum_ren, psum_same_addr,
             output reg reset_all,IF_read_start,filter_read_start,
-            clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter, accumulate
+            clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter, accumulate,
+            go_next_row
         );
 
     parameter [3:0] MOD_0 = 4'd3;
@@ -86,6 +87,7 @@ module design_controller
                     clear_regs = psum_done | stride_count_flag; // ?
                     reset_Filter = stride_pos_ld;
                     usage_stride_pos_ld = 1'b0;
+                    go_next_row = stride_pos_ld;
                 end
 
                 MOD_1_ROW_2: begin

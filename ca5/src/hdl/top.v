@@ -57,6 +57,8 @@ wire psum_clear, psum_ren, psum_same_addr, psum_empty, psum_full;
 
 wire stride_pos_ld, usage_stride_pos_ld, reset_Filter;
 
+wire go_next_row;
+
 // IF Buffer
 Fifo_buffer #(
     .DATA_WIDTH(IF_SCRATCH_WIDTH + 2),
@@ -169,6 +171,8 @@ design_datapath #(
     .usage_stride_pos_ld(usage_stride_pos_ld),
     .reset_Filter(reset_Filter),
 
+    .go_next_row(go_next_row),
+
     .module_outval(module_outval),
     .IF_buf_read(IF_buf_read),
     .filt_buf_read(filter_buf_read),
@@ -216,8 +220,9 @@ design_controller #(
     .just_add_flag(just_add_flag),
 
     .accumulate(accumulate_input_psum),
-    .P_sum_buff_empty(P_sum_buff_empty)
+    .P_sum_buff_empty(P_sum_buff_empty),
 
+    .go_next_row(go_next_row)
 );
 
 endmodule

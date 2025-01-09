@@ -32,8 +32,8 @@ module testbench2();
     reg outbuf_ren;
     reg accumulate_input_psum;
 
-    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout;
-    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] dout_val;
+    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] outbuf_dout;
+    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] dout_val;
     wire IF_full;
     wire IF_empty;
     wire filter_full;
@@ -42,6 +42,9 @@ module testbench2();
     wire outbuf_empty;
     reg [FILT_ADDR_LEN - 1:0] filt_len;
     reg [IF_ADDR_LEN - 1:0] stride_len;
+    reg [1:0] mod = 2'd1;
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_inp;
+    reg psum_buf_wen;
 
     // Instantiate the design_top module
     design_top #(
@@ -81,8 +84,10 @@ module testbench2();
         .outbuf_empty(outbuf_empty),
         .filt_len(filt_len),
         .stride_len(stride_len),
-        .calc_mod(2'd2),
-        .just_add_flag(accumulate_input_psum)
+        .calc_mod(mod),
+        .just_add_flag(accumulate_input_psum),
+        .P_sum_buff_inp(P_sum_buff_inp),
+        .psum_buf_wen(psum_buf_wen)
     );
 
     always @(posedge clk) begin
@@ -97,6 +102,7 @@ module testbench2();
     reg [15:0] psum_values [0:15];
     reg [FILT_SCRATCH_WIDTH - 1:0] filter_inputs [0:63];
     reg [IF_SCRATCH_WIDTH + 1:0] IFmap_inputs [0:63];
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] Psum_inputs [0:63];
 
     initial begin
         // Initialize signals
@@ -131,6 +137,24 @@ module testbench2();
         filter_inputs[15] = 16'b1111111111100100; IFmap_inputs[15] = 18'b001111111111010000; psum_values[15] = 16'bX;
         filter_inputs[16] = 16'b1111111111001100; IFmap_inputs[16] = 18'b011111111111000010; psum_values[16] = 16'bX;
 
+        Psum_inputs[0] = 32'd1;
+        Psum_inputs[1] = 32'd2;
+        Psum_inputs[2] = 32'bX;
+        Psum_inputs[3] = 32'bX;
+        Psum_inputs[4] = 32'bX;
+        Psum_inputs[5] = 32'bX;
+        Psum_inputs[6] = 32'bX;
+        Psum_inputs[7] = 32'bX;
+        Psum_inputs[8] = 32'bX;
+        Psum_inputs[9] = 32'bX;
+        Psum_inputs[10] = 32'bX;
+        Psum_inputs[11] = 32'bX;
+        Psum_inputs[12] = 32'bX;
+        Psum_inputs[13] = 32'bX;
+        Psum_inputs[14] = 32'bX;
+        Psum_inputs[15] = 32'bX;
+        Psum_inputs[16] = 32'bX;
+
 
         // Apply reset
         #10 rst = 0;
@@ -151,25 +175,37 @@ module testbench2();
                 IF_wen = 1;
             end
 
+            if (Psum_inputs[i] !== 32'dX) begin
+                P_sum_buff_inp = Psum_inputs[i];
+                psum_buf_wen = 1;
+            end
+
             #10;
             filter_wen = 0;
             IF_wen = 0;
+            psum_buf_wen = 0;
         end
 
         // Read outputs
-        for (i = 0; i < 12; i = i + 1) begin
-            // Wait until buffer is not empty
-            while (outbuf_empty) begin
-                #1; // Wait for 1 time unit and recheck
-            end
+        // for (i = 0; i < 12; i = i + 1) begin
+        //     // Wait until buffer is not empty
+        //     while (outbuf_empty) begin
+        //         #1; // Wait for 1 time unit and recheck
+        //     end
 
-            outbuf_ren = 1; // Enable read
-            #10;
-            $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
-            outbuf_ren = 0; // Disable read
-        end
+        //     outbuf_ren = 1; // Enable read
+        //     #10;
+        //     $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
+        //     outbuf_ren = 0; // Disable read
+        // end
         // End simulation
-        #100 $stop;
+        
+        #600 start = 0; accumulate_input_psum = 1;
+        #10 start = 1;
+        #10 start = 0;
+
+
+        #200 $stop;
     end
 
 endmodule
