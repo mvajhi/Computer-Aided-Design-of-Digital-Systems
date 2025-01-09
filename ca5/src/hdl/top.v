@@ -151,9 +151,9 @@ design_datapath #(
     .IF_buf_inp(IF_buf_inp),
     .filt_buf_inp(filter_buf_inp),
 
-    .filter_mux_sel(/**/),
+    .filter_mux_sel(1'b0), // TODO
 
-    .reset_accumulation(/**/),
+    .reset_accumulation(1'b0), // TODO
 
     .accumulate_input_psum(accumulate_input_psum),
     .p_sum_input(P_sum_buff_out),

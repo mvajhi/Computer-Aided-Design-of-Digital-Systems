@@ -75,7 +75,9 @@ module testbench2();
         .outbuf_full(outbuf_full),
         .outbuf_empty(outbuf_empty),
         .filt_len(filt_len),
-        .stride_len(stride_len)
+        .stride_len(stride_len),
+        .calc_mod(2'b00),
+        .just_add_flag(1'b0)
     );
 
     always @(posedge clk) begin

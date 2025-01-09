@@ -249,19 +249,26 @@ module design_datapath #(
 
     ////////////////////////////////////////////////
 
+    reg [P_SUM_ADDR_LEN-1:0] addr_psum = 0;
+    always @(posedge clk) begin
+        if (regs_clr) begin
+            addr_psum <= addr_psum + 1;
+        end
+    end
+
     // P_Sum Scratch pad
     wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] p_sum_scratch_out;
     P_Sum_Registers #(
         .ADDR_LEN(P_SUM_ADDR_LEN),
         .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
-        .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1'b1)
+        .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
     ) p_sum_scratch (
         .clk(clk),
         .rst(rst),
-        .wen(read_from_scratch),
-        .waddr(0),
-        .raddr(0),
-        .din(add_inp),
+        .wen(read_from_scratch && ~outbuf_write),
+        .waddr(addr_psum + regs_clr),
+        .raddr(addr_psum + regs_clr),
+        .din(add_inp[31:0]),
         .dout(p_sum_scratch_out)
     );
 
@@ -269,9 +276,9 @@ module design_datapath #(
     Mux2to1 #(
         .WIDTH(P_SUM_SCRATCH_WIDTH)
     ) p_sum_mux_a (
-        .a({P_SUM_SCRATCH_WIDTH{1'b0}}),
-        .b(p_sum_scratch_out),
-        .sel(reset_accumulation),
+        .a(p_sum_scratch_out),
+        .b({P_SUM_SCRATCH_WIDTH{1'b0}}),
+        .sel(regs_clr/* TODO reset_accumulation*/),
         .c(p_sum_mux_out)
     );
 
