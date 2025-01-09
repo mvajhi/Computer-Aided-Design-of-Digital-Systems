@@ -1,6 +1,6 @@
 `timescale 1ps / 1ps
 
-module testbench2();
+module testbench_mir_fans();
 
     // Parameters
     parameter FILT_ADDR_LEN = 4;
@@ -15,6 +15,7 @@ module testbench2();
     parameter IF_BUFFER_DEPTH = 64;
     parameter FILT_BUFFER_DEPTH = 64;
     parameter OUT_BUFFER_DEPTH = 64;
+    parameter PSUM_BUFFER_DEPTH = 64;
     parameter P_SUM_ADDR_LEN = 4;
     parameter P_SUM_SCRATCH_WIDTH = 32;
     parameter P_SUM_SCRATCH_DEPTH = 24;
@@ -41,6 +42,9 @@ module testbench2();
     wire outbuf_empty;
     reg [FILT_ADDR_LEN - 1:0] filt_len;
     reg [IF_ADDR_LEN - 1:0] stride_len;
+    reg [1:0] mod = 2'd2;
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] P_sum_buff_inp;
+    reg psum_buf_wen;
 
     // Instantiate the design_top module
     design_top #(
@@ -59,7 +63,8 @@ module testbench2();
         .P_SUM_ADDR_LEN(P_SUM_ADDR_LEN),
         .P_SUM_SCRATCH_WIDTH(P_SUM_SCRATCH_WIDTH),
         .P_SUM_SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
-        .P_SUM_PAR_WRITE(P_SUM_PAR_WRITE)
+        .P_SUM_PAR_WRITE(P_SUM_PAR_WRITE),
+        .PSUM_BUFFER_DEPTH(PSUM_BUFFER_DEPTH)
     ) uut (
         .clk(clk),
         .rst(rst),
@@ -79,8 +84,10 @@ module testbench2();
         .outbuf_empty(outbuf_empty),
         .filt_len(filt_len),
         .stride_len(stride_len),
-        .calc_mod(2'd2),
-        .just_add_flag(accumulate_input_psum)
+        .calc_mod(mod),
+        .just_add_flag(accumulate_input_psum),
+        .P_sum_buff_inp(P_sum_buff_inp),
+        .psum_buf_wen(psum_buf_wen)
     );
 
     always @(posedge clk) begin
@@ -95,6 +102,7 @@ module testbench2();
     reg [15:0] psum_values [0:15];
     reg [FILT_SCRATCH_WIDTH - 1:0] filter_inputs [0:63];
     reg [IF_SCRATCH_WIDTH + 1:0] IFmap_inputs [0:63];
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] Psum_inputs [0:63];
 
     initial begin
         // Initialize signals
@@ -129,6 +137,24 @@ module testbench2();
         filter_inputs[15] = 16'b1111111111100100; IFmap_inputs[15] = 18'b001111111111010000; psum_values[15] = 16'bX;
         filter_inputs[16] = 16'b1111111111001100; IFmap_inputs[16] = 18'b011111111111000010; psum_values[16] = 16'bX;
 
+        Psum_inputs[0] = 36'd1;
+        Psum_inputs[1] = 36'd2;
+        Psum_inputs[2] = 36'bX;
+        Psum_inputs[3] = 36'bX;
+        Psum_inputs[4] = 36'bX;
+        Psum_inputs[5] = 36'bX;
+        Psum_inputs[6] = 36'bX;
+        Psum_inputs[7] = 36'bX;
+        Psum_inputs[8] = 36'bX;
+        Psum_inputs[9] = 36'bX;
+        Psum_inputs[10] = 36'bX;
+        Psum_inputs[11] = 36'bX;
+        Psum_inputs[12] = 36'bX;
+        Psum_inputs[13] = 36'bX;
+        Psum_inputs[14] = 36'bX;
+        Psum_inputs[15] = 36'bX;
+        Psum_inputs[16] = 36'bX;
+
 
         // Apply reset
         #10 rst = 0;
@@ -149,25 +175,36 @@ module testbench2();
                 IF_wen = 1;
             end
 
+            if (Psum_inputs[i] !== 36'dX) begin
+                P_sum_buff_inp = Psum_inputs[i];
+                psum_buf_wen = 1;
+            end
+
             #10;
             filter_wen = 0;
             IF_wen = 0;
         end
 
         // Read outputs
-        for (i = 0; i < 12; i = i + 1) begin
-            // Wait until buffer is not empty
-            while (outbuf_empty) begin
-                #1; // Wait for 1 time unit and recheck
-            end
+        // for (i = 0; i < 12; i = i + 1) begin
+        //     // Wait until buffer is not empty
+        //     while (outbuf_empty) begin
+        //         #1; // Wait for 1 time unit and recheck
+        //     end
 
-            outbuf_ren = 1; // Enable read
-            #10;
-            $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
-            outbuf_ren = 0; // Disable read
-        end
+        //     outbuf_ren = 1; // Enable read
+        //     #10;
+        //     $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
+        //     outbuf_ren = 0; // Disable read
+        // end
         // End simulation
-        #100 $stop;
+
+        #10 start = 0; accumulate_input_psum = 1;
+        #10 start = 1;
+        #10 start = 0;
+
+
+        #200 $stop;
     end
 
 endmodule

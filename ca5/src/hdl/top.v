@@ -14,6 +14,7 @@ module design_top #(
     parameter outbuf_par_read,
     parameter IF_BUFFER_DEPTH,
     parameter FILT_BUFFER_DEPTH,
+    parameter PSUM_BUFFER_DEPTH,
     parameter OUT_BUFFER_DEPTH)
     (
     input wire clk,
@@ -25,7 +26,6 @@ module design_top #(
     input wire [filter_par_write * FILT_SCRATCH_WIDTH - 1 : 0] filter_din,
     input wire outbuf_ren,
     
-    input wire accumulate_input_psum,
     input wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_inp,
 
     output wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout,
@@ -39,10 +39,11 @@ module design_top #(
     input wire [FILT_ADDR_LEN - 1:0] filt_len,
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [1:0] calc_mod,
-    input wire just_add_flag
-
-
+    input wire just_add_flag,
+    input wire psum_buf_wen
 );
+
+wire accumulate_input_psum;
 
 // Internal wires
 wire IF_read_start, filter_read_start, regs_clr, start_rd_gen, reset_all;
@@ -96,16 +97,16 @@ Fifo_buffer #(
 wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_out;
 wire P_sum_buff_empty, P_sum_buff_full;
 Fifo_buffer #(
-    .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH),
+    .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1),
     .PAR_WRITE(P_SUM_PAR_WRITE),
     .PAR_READ(1),
-    .DEPTH(OUT_BUFFER_DEPTH)
+    .DEPTH(PSUM_BUFFER_DEPTH)
 ) p_sum_buffer (
     .clk(clk),
     .rstn(~rst),
     .clear(1'b0),
     .ren(accumulate_input_psum),
-    .wen(1'b1),
+    .wen(psum_buf_wen),
     .din(P_sum_buff_inp),
     .dout(P_sum_buff_out),
     .full(P_sum_buff_full),
@@ -213,6 +214,9 @@ design_controller #(
     .start_rd_gen(start_rd_gen),
     .mod(calc_mod),
     .just_add_flag(just_add_flag),
+
+    .accumulate(accumulate_input_psum),
+    .P_sum_buff_empty(P_sum_buff_empty)
 
 );
 

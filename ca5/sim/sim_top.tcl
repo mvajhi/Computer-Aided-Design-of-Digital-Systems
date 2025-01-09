@@ -6,7 +6,7 @@ exec vlib work
 vmap work work
 
 # Set testbench and paths
-set TB "testbench2"
+set TB "testbench_mir_fans"
 set hdl_path "../src/hdl"
 set inc_path "../src/inc"
 
