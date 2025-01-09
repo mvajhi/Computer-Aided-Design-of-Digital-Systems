@@ -10,13 +10,14 @@ module read_addr_gen_module
           input wire [FILT_ADDR_LEN - 1:0] filter_len, filt_waddr,
           output wire [IF_ADDR_LEN - 1:0] IF_raddr,
           output wire [FILT_ADDR_LEN - 1:0] filt_raddr,
-          output wire read_from_scratch, done, full_done, stride_count_flag
+          output wire read_from_scratch, done, full_done, stride_count_flag,
+          output wire stride_pos_ld
         );
 
         // Internal Signals for Wiring
         wire filter_count_flag, filter_pos_flag, read_safe;
         wire filter_count_cnt_en, filter_pos_cnt_en, filter_pos_ld;
-        wire stride_cnt_en, stride_pos_ld;
+        wire stride_cnt_en;
         wire reset_all;
 
         // Instantiate Controller

@@ -5,7 +5,7 @@ module design_controller
         parameter SCRATCH_WIDTH)
         (
             input wire clk,rst,
-            input wire start,full_done,psum_done,stride_count_flag, mod, just_add_flag,
+            input wire start,full_done,psum_done,stride_count_flag, mod, just_add_flag, stride_pos_ld,
             output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen
         );
 
