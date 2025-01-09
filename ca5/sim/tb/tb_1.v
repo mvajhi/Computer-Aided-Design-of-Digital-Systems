@@ -1,6 +1,6 @@
 `timescale 1ps / 1ps
 
-module testbench2();
+module tb_1();
 
     // Parameters
     parameter FILT_ADDR_LEN = 4;
