@@ -15,6 +15,10 @@ module testbench2();
     parameter IF_BUFFER_DEPTH = 64;
     parameter FILT_BUFFER_DEPTH = 64;
     parameter OUT_BUFFER_DEPTH = 64;
+    parameter P_SUM_ADDR_LEN = 4;
+    parameter P_SUM_SCRATCH_WIDTH = 16;
+    parameter P_SUM_SCRATCH_DEPTH = 24;
+    parameter P_SUM_PAR_WRITE = 1;
 
     // Signals
     reg clk;
@@ -49,7 +53,11 @@ module testbench2();
         .outbuf_par_read(outbuf_par_read),
         .IF_BUFFER_DEPTH(IF_BUFFER_DEPTH),
         .FILT_BUFFER_DEPTH(FILT_BUFFER_DEPTH),
-        .OUT_BUFFER_DEPTH(OUT_BUFFER_DEPTH)
+        .OUT_BUFFER_DEPTH(OUT_BUFFER_DEPTH),
+        .P_SUM_ADDR_LEN(P_SUM_ADDR_LEN),
+        .P_SUM_SCRATCH_WIDTH(P_SUM_SCRATCH_WIDTH),
+        .P_SUM_SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
+        .P_SUM_PAR_WRITE(P_SUM_PAR_WRITE)
     ) uut (
         .clk(clk),
         .rst(rst),

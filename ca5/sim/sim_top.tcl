@@ -25,6 +25,7 @@ vlog +acc -incr -source +define+SIM $hdl_path/read_addr_gen.v
 vlog +acc -incr -source +define+SIM $hdl_path/top.v
 vlog +acc -incr -source +define+SIM $hdl_path/aux_mir.v
 vlog +acc -incr -source +define+SIM $hdl_path/Mux2to1.v
+vlog +acc -incr -source +define+SIM $hdl_path/P_Sum_Scratch.v
 vlog +acc -incr -source +define+SIM $hdl_path/controller.v
 vlog +acc -incr -source +define+SIM $hdl_path/fifo_buffer.v
 vlog +acc -incr -source +define+SIM $hdl_path/out_buf.v
