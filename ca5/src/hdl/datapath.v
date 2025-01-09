@@ -250,7 +250,7 @@ module design_datapath #(
     ////////////////////////////////////////////////
 
     // P_Sum Scratch pad
-    wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_scratch_out;
+    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] p_sum_scratch_out;
     P_Sum_Registers #(
         .ADDR_LEN(P_SUM_ADDR_LEN),
         .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
