@@ -1,6 +1,6 @@
 `timescale 1ps / 1ps
 
-module testbench2();
+module tb_1();
 
     // Parameters
     parameter FILT_ADDR_LEN = 4;
@@ -113,8 +113,8 @@ module testbench2();
         stride_len = 2;   // Adjusted based on CSV
 
         // Input data
-        filter_inputs[0] = 16'bX;                IFmap_inputs[0] = 18'b101111111111010111; psum_values[0] = 16'b1111101000101100;
-        filter_inputs[1] = 16'bX;                IFmap_inputs[1] = 18'b000000000000101001; psum_values[1] = 16'b0001000100101110;
+        filter_inputs[0] = 16'bX; IFmap_inputs[0] = 18'b101111111111010111; psum_values[0] = 16'b1111101000101100;
+        filter_inputs[1] = 16'bX; IFmap_inputs[1] = 18'b000000000000101001; psum_values[1] = 16'b0001000100101110;
         filter_inputs[2] = 16'bX;                IFmap_inputs[2] = 18'b001111111111010011; psum_values[2] = 16'b0000110111111001;
         filter_inputs[3] = 16'b1111111111010111; IFmap_inputs[3] = 18'bX;                psum_values[3] = 16'b0000111011110101;
         filter_inputs[4] = 16'b1111111111001001; IFmap_inputs[4] = 18'b000000000000001001; psum_values[4] = 16'b0000001111100101;
