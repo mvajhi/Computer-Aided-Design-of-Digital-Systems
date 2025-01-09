@@ -145,7 +145,6 @@ design_datapath #(
     .IF_buf_inp(IF_buf_inp),
     .filt_buf_inp(filter_buf_inp),
 
-    .IF_mux_sel(/**/),
     .filter_mux_sel(/**/),
 
     .reset_accumulation(/**/),
