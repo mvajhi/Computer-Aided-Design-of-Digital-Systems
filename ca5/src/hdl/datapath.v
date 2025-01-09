@@ -32,7 +32,7 @@ module design_datapath #(
     input wire usage_stride_pos_ld,
     input wire reset_Filter,
     
-    output wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] module_outval,
+    output wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] module_outval,
     output wire IF_buf_read,
     output wire filt_buf_read,
     output wire full_done,
@@ -54,7 +54,7 @@ module design_datapath #(
     wire [IF_SCRATCH_WIDTH - 1:0] IF_scratch_out, IF_scratch_reg_out;
     wire [FILT_SCRATCH_WIDTH - 1:0] filt_scratch_out;
     wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] mult_inp, mult_reg_out;
-    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] add_inp;
+    wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] add_inp;
 
     // IF Read Module
     IF_read_module #(
@@ -276,7 +276,7 @@ module design_datapath #(
 
 
     Psum_scratch_pad #(
-        .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1),
+        .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH),
         .PAR_WRITE(1),
         .PAR_READ(1),
         .DEPTH(P_SUM_SCRATCH_DEPTH)

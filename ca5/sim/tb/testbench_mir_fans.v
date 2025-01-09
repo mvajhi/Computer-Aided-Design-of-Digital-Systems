@@ -32,8 +32,8 @@ module testbench_mir_fans();
     reg outbuf_ren;
     reg accumulate_input_psum;
 
-    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout;
-    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] dout_val;
+    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] outbuf_dout;
+    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] dout_val;
     wire IF_full;
     wire IF_empty;
     wire filter_full;
@@ -43,7 +43,7 @@ module testbench_mir_fans();
     reg [FILT_ADDR_LEN - 1:0] filt_len;
     reg [IF_ADDR_LEN - 1:0] stride_len;
     reg [1:0] mod = 2'd2;
-    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] P_sum_buff_inp;
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_inp;
     reg psum_buf_wen;
 
     // Instantiate the design_top module
@@ -102,7 +102,7 @@ module testbench_mir_fans();
     reg [15:0] psum_values [0:15];
     reg [FILT_SCRATCH_WIDTH - 1:0] filter_inputs [0:63];
     reg [IF_SCRATCH_WIDTH + 1:0] IFmap_inputs [0:63];
-    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] Psum_inputs [0:63];
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] Psum_inputs [0:63];
 
     initial begin
         // Initialize signals

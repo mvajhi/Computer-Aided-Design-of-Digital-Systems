@@ -157,7 +157,7 @@ endgenerate
 assign full = |full_conditions;
 assign empty = |empty_conditions;
 
-reg [BUFFER_ADDR_WIDTH-1:0] raddr;
+wire [BUFFER_ADDR_WIDTH-1:0] raddr;
 assign raddr = same_addr ? waddr_cnt : raddr_cnt;
 
 Buffer #(
