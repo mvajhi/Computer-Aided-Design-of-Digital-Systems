@@ -47,7 +47,7 @@ wire [IF_SCRATCH_WIDTH + 1:0] IF_buf_inp;
 wire [FILT_SCRATCH_WIDTH - 1:0] filter_buf_inp;
 wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] module_outval;
 
-wire stride_pos_ld;
+wire stride_pos_ld, usage_stride_pos_ld, reset_Filter;
 
 // IF Buffer
 Fifo_buffer #(
@@ -153,6 +153,9 @@ design_datapath #(
     .accumulate_input_psum(accumulate_input_psum),
     .p_sum_input(P_sum_buff_out),
 
+    .usage_stride_pos_ld(usage_stride_pos_ld),
+    .reset_Filter(reset_Filter),
+
     .module_outval(module_outval),
     .IF_buf_read(IF_buf_read),
     .filt_buf_read(filter_buf_read),
@@ -179,6 +182,9 @@ design_controller #(
     .psum_done(psum_done),
     .stride_count_flag(stride_count_flag),
     .stride_pos_ld(stride_pos_ld),
+
+    .usage_stride_pos_ld(usage_stride_pos_ld),
+    .reset_Filter(reset_Filter),
 
     .reset_all(reset_all),
     .IF_read_start(IF_read_start),

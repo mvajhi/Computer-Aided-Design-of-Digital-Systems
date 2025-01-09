@@ -6,7 +6,7 @@ module design_controller
         (
             input wire clk,rst,
             input wire start,full_done,psum_done,stride_count_flag, mod, just_add_flag, stride_pos_ld,
-            output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen
+            output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter
         );
 
     parameter [2:0] MOD_0 = 3'd3;

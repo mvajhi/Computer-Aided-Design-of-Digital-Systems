@@ -8,6 +8,10 @@ module read_addr_gen_module
           input wire start, IF_end_valid, filt_ready, stall_pipeline,
           input wire [IF_ADDR_LEN - 1:0] stride_len, IF_end_pos, IF_start_pos, IF_waddr,
           input wire [FILT_ADDR_LEN - 1:0] filter_len, filt_waddr,
+          
+          input wire usage_stride_pos_ld,
+          input wire reset_Filter,
+
           output wire [IF_ADDR_LEN - 1:0] IF_raddr,
           output wire [FILT_ADDR_LEN - 1:0] filt_raddr,
           output wire read_from_scratch, done, full_done, stride_count_flag,
@@ -50,7 +54,7 @@ module read_addr_gen_module
             .IF_SCRATCH_DEPTH(IF_SCRATCH_DEPTH),
             .IF_SCRATCH_WIDTH(IF_SCRATCH_WIDTH)
         ) datapath (
-            .clk(clk),.rst(rst | reset_all),
+            .clk(clk),.rst(rst | reset_all | reset_Filter),
             .stride_len(stride_len),
             .IF_end_pos(IF_end_pos),
             .IF_start_pos(IF_start_pos),
@@ -65,7 +69,10 @@ module read_addr_gen_module
             .filter_pos_ld(filter_pos_ld),
             .filter_pos_cnt_en(filter_pos_cnt_en),
             .stride_cnt_en(stride_cnt_en),
+            
             .stride_pos_ld(stride_pos_ld),
+            .usage_stride_pos_ld(usage_stride_pos_ld),
+
             .stride_count_flag(stride_count_flag),
             .read_safe(read_safe),
             .filter_count_flag(filter_count_flag),
@@ -147,7 +154,7 @@ module  read_addr_gen_datapath
             output wire[IF_ADDR_LEN - 1:0] IF_raddr,
             output wire [FILT_ADDR_LEN - 1:0] filt_raddr,
             input wire IF_end_valid,filt_ready,filter_count_cnt_en,filter_pos_ld,filter_pos_cnt_en,
-            stride_cnt_en,stride_pos_ld,
+            stride_cnt_en,stride_pos_ld,usage_stride_pos_ld
             output wire stride_count_flag,read_safe,filter_count_flag,filter_pos_flag
         );
 
@@ -202,7 +209,7 @@ module  read_addr_gen_datapath
 
         assign filter_pos_flag = ((filter_len - 1) == filter_pos_out);
 
-        Counter #(.NUM_BIT(IF_ADDR_LEN)) stride_pos_cnt (.clk(clk),.rst(rst),.ld_cnt(stride_pos_ld),
+        Counter #(.NUM_BIT(IF_ADDR_LEN)) stride_pos_cnt (.clk(clk),.rst(rst),.ld_cnt(stride_pos_ld && usage_stride_pos_ld),
         .cnt_en(stride_cnt_en),.co(dum3),.load_value(0),.cnt_out_wire(stride_pos_out));
 
         wire[IF_ADDR_LEN:0] stride_mult;
