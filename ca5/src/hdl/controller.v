@@ -5,17 +5,19 @@ module design_controller
         parameter SCRATCH_WIDTH)
         (
             input wire clk,rst,
-            input wire start,full_done,psum_done,stride_count_flag, mod, just_add_flag, stride_pos_ld,
+            input wire start,full_done,psum_done,stride_count_flag, just_add_flag, stride_pos_ld,
+            input wire [1:0] mod,
             output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter
         );
 
-    parameter [2:0] MOD_0 = 3'd3;
-    parameter [2:0] MOD_1 = 3'd4;
-    parameter [2:0] MOD_2 = 3'd5;
-    parameter [2:0] MOD_3 = 3'd6;
-    parameter [2:0] JUST_ADD = 3'd7;
+    parameter [3:0] MOD_0 = 4'd3;
+    parameter [3:0] MOD_1 = 4'd4;
+    parameter [3:0] MOD_1_ROW_2 = 4'd8;
+    parameter [3:0] MOD_2 = 4'd5;
+    parameter [3:0] MOD_3 = 4'd6;
+    parameter [3:0] JUST_ADD = 4'd7;
 
-    reg [2:0] ps = 3'd0, ns;
+    reg [3:0] ps = 4'd0, ns;
     // Sequential logic for present state
     always @(posedge clk,posedge rst) begin
         if (rst) 
@@ -31,8 +33,17 @@ module design_controller
         case (ps)
             3'd0: ns = (start) ? 3'd1 : 3'd0;
             3'd1: ns = (start) ? 3'd1 : 3'd2;
-            3'd2: ns = 3'd3;
-            MOD_0: ns = (full_done) ? 3'd2 : 3'd3;
+            3'd2: ns =  just_add_flag ? JUST_ADD :
+                        mod == 2'd0 ? MOD_0 : 
+                        mod == 2'd1 ? MOD_1 : 
+                        mod == 2'd2 ? MOD_2 : 
+                        mod == 2'd3 ? MOD_3 : 3'd2;
+            MOD_0: ns = (full_done) ? 3'd2 : MOD_0;
+            MOD_1: ns = (stride_pos_ld) ? MOD_1_ROW_2 : MOD_1;
+            MOD_1_ROW_2: ns = (stride_pos_ld) ? 3'd0 : MOD_1_ROW_2;
+            MOD_2: ns = (full_done) ? 3'd2 : MOD_2;
+            MOD_3: ns = (full_done) ? 3'd2 : MOD_3;
+            JUST_ADD: ns = (full_done) ? 3'd2 : JUST_ADD;
             default: ns = 3'd0;
         endcase
     end
@@ -42,6 +53,7 @@ module design_controller
 
         reset_all = 1'b0; IF_read_start = 1'b0; filter_read_start = 1'b0; 
         clear_regs = 1'b0; start_rd_gen = 1'b0;
+        usage_stride_pos_ld = 1'b1; reset_Filter = 1'b0;
 
             case (ps)
                 3'd0: reset_all = 1'b1;
@@ -57,24 +69,31 @@ module design_controller
                 end
 
                 MOD_0: begin
-                    clear_regs = psum_done | stride_count_flag;
+                    clear_regs = psum_done | stride_count_flag; // ?
                     reset_all = start;
                 end
 
                 MOD_1: begin
+                    clear_regs = psum_done | stride_count_flag; // ?
+                    reset_Filter = stride_pos_ld;
+                    usage_stride_pos_ld = 1'b0;
+                end
 
+                MOD_1_ROW_2: begin
+                    clear_regs = psum_done | stride_count_flag;
+                    // TODO
                 end
 
                 MOD_2: begin
-
+                    // TODO
                 end
 
                 MOD_3: begin
-
+                    // TODO
                 end
 
                 JUST_ADD: begin
-
+                    // TODO
                 end
             endcase
         end
