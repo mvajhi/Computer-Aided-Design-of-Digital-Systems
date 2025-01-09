@@ -7,6 +7,7 @@ module design_controller
             input wire clk,rst,
             input wire start,full_done,psum_done,stride_count_flag, just_add_flag, stride_pos_ld, 
             input wire P_sum_buff_empty, psum_empty,
+            input wire psum_clear, psum_ren, psum_same_addr,
             input wire [1:0] mod,
             output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter, accumulate
         );
@@ -60,6 +61,7 @@ module design_controller
         clear_regs = 1'b0; start_rd_gen = 1'b0;
         usage_stride_pos_ld = 1'b1; reset_Filter = 1'b0;
         accumulate = 1'b0;
+        psum_clear = 1'b0; psum_ren = 1'b0; psum_same_addr = 1'b1;
 
             case (ps)
                 3'd0: reset_all = 1'b1;
@@ -97,6 +99,8 @@ module design_controller
 
                 JUST_ADD: begin
                     accumulate = just_add_flag && ~P_Sum_buff_empty && ~psum_empty;
+                    psum_ren = 1'b1;
+                    psum_same_addr = 1'b0;
                 end
             endcase
         end
