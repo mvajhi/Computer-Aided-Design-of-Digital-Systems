@@ -241,6 +241,7 @@ module design_datapath #(
     );
 
     // Adder Register
+    wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_mux_out;
     assign add_inp = p_sum_mux_out + mult_reg_out;
 
     // Output Assignment
@@ -265,7 +266,6 @@ module design_datapath #(
     );
 
     // P_Sum Mux
-    wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_mux_out;
     Mux2to1 #(
         .WIDTH(P_SUM_SCRATCH_WIDTH)
     ) p_sum_mux_a (
