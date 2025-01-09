@@ -16,7 +16,7 @@ module testbench2();
     parameter FILT_BUFFER_DEPTH = 64;
     parameter OUT_BUFFER_DEPTH = 64;
     parameter P_SUM_ADDR_LEN = 4;
-    parameter P_SUM_SCRATCH_WIDTH = 16;
+    parameter P_SUM_SCRATCH_WIDTH = 32;
     parameter P_SUM_SCRATCH_DEPTH = 24;
     parameter P_SUM_PAR_WRITE = 1;
 
