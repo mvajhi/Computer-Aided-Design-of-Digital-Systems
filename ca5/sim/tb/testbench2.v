@@ -15,6 +15,7 @@ module testbench2();
     parameter IF_BUFFER_DEPTH = 64;
     parameter FILT_BUFFER_DEPTH = 64;
     parameter OUT_BUFFER_DEPTH = 64;
+    parameter PSUM_BUFFER_DEPTH = 64;
     parameter P_SUM_ADDR_LEN = 4;
     parameter P_SUM_SCRATCH_WIDTH = 32;
     parameter P_SUM_SCRATCH_DEPTH = 24;
@@ -59,7 +60,8 @@ module testbench2();
         .P_SUM_ADDR_LEN(P_SUM_ADDR_LEN),
         .P_SUM_SCRATCH_WIDTH(P_SUM_SCRATCH_WIDTH),
         .P_SUM_SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
-        .P_SUM_PAR_WRITE(P_SUM_PAR_WRITE)
+        .P_SUM_PAR_WRITE(P_SUM_PAR_WRITE),
+        .PSUM_BUFFER_DEPTH(PSUM_BUFFER_DEPTH)
     ) uut (
         .clk(clk),
         .rst(rst),

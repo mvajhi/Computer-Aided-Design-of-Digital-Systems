@@ -99,7 +99,7 @@ module design_controller
                 end
 
                 JUST_ADD: begin
-                    accumulate = ~P_sum_buff_empty && psum_empty;
+                    accumulate = ~P_sum_buff_empty && ~psum_empty;
                     psum_ren = 1'b1;
                     psum_same_addr = 1'b0;
                 end

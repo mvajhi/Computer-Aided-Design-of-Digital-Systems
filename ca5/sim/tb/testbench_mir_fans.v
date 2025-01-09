@@ -199,8 +199,8 @@ module testbench_mir_fans();
         //     outbuf_ren = 0; // Disable read
         // end
         // End simulation
-
-        #10 start = 0; accumulate_input_psum = 1;
+        
+        #200 start = 0; accumulate_input_psum = 1;
         #10 start = 1;
         #10 start = 0;
 
