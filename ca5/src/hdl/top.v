@@ -20,6 +20,10 @@ module design_top #(
     input wire filter_wen,
     input wire [filter_par_write * FILT_SCRATCH_WIDTH - 1 : 0] filter_din,
     input wire outbuf_ren,
+    
+    input wire accumulate_input_psum,
+    input wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_inp,
+
     output wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout,
     output wire IF_full,
     output wire IF_empty,
@@ -27,6 +31,7 @@ module design_top #(
     output wire filter_empty,
     output wire outbuf_full,
     output wire outbuf_empty,
+    
     input wire [FILT_ADDR_LEN - 1:0] filt_len,
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [1:0] calc_mod,
@@ -76,6 +81,24 @@ Fifo_buffer #(
     .full(filter_full),
     .empty(filter_empty)
 );
+
+// P_sum Buffer
+Fifo_buffer #(
+    .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH),
+    .PAR_WRITE(/**/),
+    .PAR_READ(/**/),
+    .DEPTH(OUT_BUFFER_DEPTH)
+) p_sum_buffer (
+    .clk(clk),
+    .rstn(~rst),
+    .clear(1'b0),
+    .ren(accumulate_input_psum),
+    .wen(1'b1),
+    .din(P_sum_buff_inp),
+    .dout(/**/),
+    .full(),
+    .empty()
+); 
 
 // Output Buffer
 Fifo_buffer #(
