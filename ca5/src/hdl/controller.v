@@ -39,7 +39,7 @@ module design_controller
                         mod == 2'd0 ? MOD_0 : 
                         mod == 2'd1 ? MOD_1_p : 
                         mod == 2'd2 ? MOD_2_p : 
-                        mod == 2'd3 ? MOD_3 : 3'd2;
+                        mod == 2'd3 ? MOD_2_p : 3'd2;
             MOD_0: ns = (full_done) ? 3'd2 : MOD_0;
             MOD_1_p: ns = (stride_pos_ld) ? MOD_1 : MOD_1_p;
             MOD_1: ns = (stride_pos_ld) ? MOD_1_ROW_2 : MOD_1;
@@ -89,13 +89,8 @@ module design_controller
                 end
 
                 MOD_2: begin
-                    // TODO
                     clear_regs = psum_done | stride_count_flag; // ?
                     reset_all = start;
-                end
-
-                MOD_3: begin
-                    // TODO
                 end
 
                 JUST_ADD: begin
