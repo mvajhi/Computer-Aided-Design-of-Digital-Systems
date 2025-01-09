@@ -21,6 +21,8 @@ module design_datapath #(
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [IF_SCRATCH_WIDTH + 1:0] IF_buf_inp,
     input wire [FILT_SCRATCH_WIDTH - 1:0] filt_buf_inp,
+
+    input wire psum_clear, psum_ren, psum_same_addr,
     
     input wire filter_mux_sel,
 
@@ -40,7 +42,9 @@ module design_datapath #(
     output wire stride_count_flag,
     output wire outbuf_write,
 
-    output wire stride_pos_ld
+    output wire stride_pos_ld,
+    output wire psum_empty, psum_full
+
 );
 
     // Wire declarations
@@ -258,18 +262,38 @@ module design_datapath #(
 
     // P_Sum Scratch pad
     wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] p_sum_scratch_out;
-    P_Sum_Registers #(
-        .ADDR_LEN(P_SUM_ADDR_LEN),
-        .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
-        .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
-    ) p_sum_scratch (
+    // P_Sum_Registers #(
+    //     .ADDR_LEN(P_SUM_ADDR_LEN),
+    //     .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
+    //     .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
+    // ) p_sum_scratch (
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .wen(read_from_scratch && ~outbuf_write),
+    //     .waddr(addr_psum + regs_clr),
+    //     .raddr(addr_psum + regs_clr),
+    //     .din(add_inp[31:0]),
+    //     .dout(p_sum_scratch_out)
+    // );
+
+
+    Psum_scratch_pad #(
+        .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1),
+        .PAR_WRITE(1),
+        .PAR_READ(1),
+        .DEPTH(P_SUM_SCRATCH_DEPTH)
+    ) p_sum_scratch_pad (
         .clk(clk),
-        .rst(rst),
-        .wen(read_from_scratch && ~outbuf_write),
-        .waddr(addr_psum + regs_clr),
-        .raddr(addr_psum + regs_clr),
-        .din(add_inp[31:0]),
-        .dout(p_sum_scratch_out)
+        .rstn(~rst),
+        .clear(psum_clear), // TODO 0
+        .ren(psum_ren), // TODO 0
+        .wen(read_from_scratch && ~outbuf_write && ~regs_clr),
+        .freeze(~regs_clr),
+        .same_addr(psum_same_addr), // 1
+        .din(add_inp),
+        .dout(p_sum_scratch_out),
+        .empty(psum_empty),
+        .full(psum_full)
     );
 
     // P_Sum Mux

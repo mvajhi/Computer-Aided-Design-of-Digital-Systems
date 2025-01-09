@@ -39,7 +39,9 @@ module design_top #(
     input wire [FILT_ADDR_LEN - 1:0] filt_len,
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [1:0] calc_mod,
-    input wire just_add_flag
+    input wire just_add_flag,
+
+
 );
 
 // Internal wires
@@ -49,6 +51,8 @@ wire stride_count_flag, outbuf_write;
 wire [IF_SCRATCH_WIDTH + 1:0] IF_buf_inp;
 wire [FILT_SCRATCH_WIDTH - 1:0] filter_buf_inp;
 wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] module_outval;
+
+wire psum_clear, psum_ren, psum_same_addr, psum_empty, psum_full;
 
 wire stride_pos_ld, usage_stride_pos_ld, reset_Filter;
 
@@ -169,7 +173,13 @@ design_datapath #(
     .stride_count_flag(stride_count_flag),
     .outbuf_write(outbuf_write),
     
-    .stride_pos_ld(stride_pos_ld)
+    .stride_pos_ld(stride_pos_ld),
+
+    .psum_clear(psum_clear),
+    .psum_ren(psum_ren),
+    .psum_same_addr(psum_same_addr),
+    .psum_empty(psum_empty),
+    .psum_full(psum_full)
 );
 
 // Controller
