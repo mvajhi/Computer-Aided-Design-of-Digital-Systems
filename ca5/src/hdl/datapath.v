@@ -254,7 +254,7 @@ module design_datapath #(
     P_Sum_Registers #(
         .ADDR_LEN(P_SUM_ADDR_LEN),
         .SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
-        .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
+        .SCRATCH_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1'b1)
     ) p_sum_scratch (
         .clk(clk),
         .rst(rst),
