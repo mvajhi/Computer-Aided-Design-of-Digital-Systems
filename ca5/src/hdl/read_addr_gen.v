@@ -154,7 +154,7 @@ module  read_addr_gen_datapath
             output wire[IF_ADDR_LEN - 1:0] IF_raddr,
             output wire [FILT_ADDR_LEN - 1:0] filt_raddr,
             input wire IF_end_valid,filt_ready,filter_count_cnt_en,filter_pos_ld,filter_pos_cnt_en,
-            stride_cnt_en,stride_pos_ld,usage_stride_pos_ld
+            stride_cnt_en,stride_pos_ld,usage_stride_pos_ld,
             output wire stride_count_flag,read_safe,filter_count_flag,filter_pos_flag
         );
 
