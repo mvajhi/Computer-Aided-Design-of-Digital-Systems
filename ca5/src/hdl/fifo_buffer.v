@@ -192,7 +192,7 @@ always @(posedge clk) begin
     else if (clear) begin
         raddr_cnt = 0;
         waddr_cnt = 0;
-    end if (freeze) begin
+    end if (freeze && same_addr) begin
         // do nothing
         is_freeze <= 1'b1;
     end
