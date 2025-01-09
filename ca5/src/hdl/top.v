@@ -39,7 +39,7 @@ module design_top #(
     input wire [FILT_ADDR_LEN - 1:0] filt_len,
     input wire [IF_ADDR_LEN - 1:0] stride_len,
     input wire [1:0] calc_mod,
-    input wire just_add_flag,
+    input wire just_add_flag
 
 
 );

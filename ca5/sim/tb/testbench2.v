@@ -81,7 +81,7 @@ module testbench2();
         .outbuf_empty(outbuf_empty),
         .filt_len(filt_len),
         .stride_len(stride_len),
-        .calc_mod(2'd1),
+        .calc_mod(2'd2),
         .just_add_flag(1'b0)
     );
 

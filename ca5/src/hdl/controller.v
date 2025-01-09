@@ -12,8 +12,10 @@ module design_controller
 
     parameter [3:0] MOD_0 = 4'd3;
     parameter [3:0] MOD_1 = 4'd4;
+    parameter [3:0] MOD_1_p = 4'd10;
     parameter [3:0] MOD_1_ROW_2 = 4'd8;
     parameter [3:0] MOD_2 = 4'd5;
+    parameter [3:0] MOD_2_p = 4'd9;
     parameter [3:0] MOD_3 = 4'd6;
     parameter [3:0] JUST_ADD = 4'd7;
 
@@ -35,13 +37,15 @@ module design_controller
             3'd1: ns = (start) ? 3'd1 : 3'd2;
             3'd2: ns =  just_add_flag ? JUST_ADD :
                         mod == 2'd0 ? MOD_0 : 
-                        (mod == 2'd1 && stride_pos_ld) ? MOD_1 : 
-                        mod == 2'd2 ? MOD_2 : 
+                        mod == 2'd1 ? MOD_1_p : 
+                        mod == 2'd2 ? MOD_2_p : 
                         mod == 2'd3 ? MOD_3 : 3'd2;
             MOD_0: ns = (full_done) ? 3'd2 : MOD_0;
+            MOD_1_p: ns = (stride_pos_ld) ? MOD_1 : MOD_1_p;
             MOD_1: ns = (stride_pos_ld) ? MOD_1_ROW_2 : MOD_1;
             MOD_1_ROW_2: ns = (stride_pos_ld) ? 3'd0 : MOD_1_ROW_2;
-            MOD_2: ns = (full_done) ? 3'd2 : MOD_2;
+            MOD_2_p: ns = (stride_pos_ld) ? MOD_2 : MOD_2_p;
+            MOD_2: ns = (stride_pos_ld) ? 3'd0 : MOD_2;
             MOD_3: ns = (full_done) ? 3'd2 : MOD_3;
             JUST_ADD: ns = (full_done) ? 3'd2 : JUST_ADD;
             default: ns = 3'd0;
@@ -69,7 +73,7 @@ module design_controller
                 end
 
                 MOD_0: begin
-                    clear_regs = psum_done | stride_count_flag; // ?
+                    clear_regs = psum_done | stride_count_flag;
                     reset_all = start;
                 end
 
@@ -80,12 +84,14 @@ module design_controller
                 end
 
                 MOD_1_ROW_2: begin
-                    clear_regs = psum_done | stride_count_flag;
+                    clear_regs = psum_done | stride_count_flag; // ?
                     // TODO
                 end
 
                 MOD_2: begin
                     // TODO
+                    clear_regs = psum_done | stride_count_flag; // ?
+                    reset_all = start;
                 end
 
                 MOD_3: begin

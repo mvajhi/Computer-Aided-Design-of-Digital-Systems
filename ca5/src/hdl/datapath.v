@@ -285,11 +285,11 @@ module design_datapath #(
     ) p_sum_scratch_pad (
         .clk(clk),
         .rstn(~rst),
-        .clear(psum_clear), // TODO 0
-        .ren(psum_ren), // TODO 0
+        .clear(1'b0), // TODO 0
+        .ren(1'b0), // TODO 0
         .wen(read_from_scratch && ~outbuf_write && ~regs_clr),
         .freeze(~regs_clr),
-        .same_addr(psum_same_addr), // 1
+        .same_addr(1'b1), // 1
         .din(add_inp),
         .dout(p_sum_scratch_out),
         .empty(psum_empty),

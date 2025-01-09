@@ -6,7 +6,7 @@ exec vlib work
 vmap work work
 
 # Set testbench and paths
-set TB "tb_1"
+set TB "testbench2"
 set hdl_path "../src/hdl"
 set inc_path "../src/inc"
 
@@ -45,6 +45,7 @@ vsim -voptargs=+acc -debugDB $TB
 add wave -hex -group {TB} sim:/$TB/*
 add wave -hex -group {top} sim:/$TB/uut/*
 add wave -hex -group -r {all} sim:/$TB/*
+add wave -hex -position end  sim:/testbench2/uut/datapath/p_sum_scratch_pad/buffer/memory
 
 #=========================== Configure Wave Signals =============================
 configure wave -signalnamewidth 2
