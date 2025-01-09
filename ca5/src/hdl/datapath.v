@@ -30,6 +30,9 @@ module design_datapath #(
     
     input wire accumulate_input_psum,
     input wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] p_sum_input,
+
+    input wire usage_stride_pos_ld,
+    input wire reset_Filter,
     
     output wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH:0] module_outval,
     output wire IF_buf_read,
@@ -37,7 +40,9 @@ module design_datapath #(
     output wire full_done,
     output wire psum_done,
     output wire stride_count_flag,
-    output wire outbuf_write
+    output wire outbuf_write,
+
+    output wire stride_pos_ld
 );
 
     // Wire declarations
@@ -120,12 +125,17 @@ module design_datapath #(
         .IF_waddr(IF_waddr),
         .filter_len(filt_len),
         .filt_waddr(filt_waddr),
+
+        .usage_stride_pos_ld(usage_stride_pos_ld),
+        .reset_Filter(reset_Filter),
+
         .IF_raddr(IF_raddr),
         .filt_raddr(filt_raddr),
         .read_from_scratch(read_from_scratch),
         .done(done),
         .full_done(full_done),
-        .stride_count_flag(stride_count_flag)
+        .stride_count_flag(stride_count_flag),
+        .stride_pos_ld(stride_pos_ld),
     );
 
     // IF Scratchpad
