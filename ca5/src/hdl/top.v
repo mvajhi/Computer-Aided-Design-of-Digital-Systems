@@ -7,6 +7,7 @@ module design_top #(
     parameter FILT_SCRATCH_WIDTH,
     parameter IF_par_write,
     parameter filter_par_write,
+    parameter P_SUM_PAR_WRITE,
     parameter outbuf_par_read,
     parameter IF_BUFFER_DEPTH,
     parameter FILT_BUFFER_DEPTH,
@@ -83,10 +84,11 @@ Fifo_buffer #(
 );
 
 // P_sum Buffer
+wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_out;
 Fifo_buffer #(
     .DATA_WIDTH(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH),
-    .PAR_WRITE(/**/),
-    .PAR_READ(/**/),
+    .PAR_WRITE(P_SUM_PAR_WRITE),
+    .PAR_READ(1),
     .DEPTH(OUT_BUFFER_DEPTH)
 ) p_sum_buffer (
     .clk(clk),
@@ -95,7 +97,7 @@ Fifo_buffer #(
     .ren(accumulate_input_psum),
     .wen(1'b1),
     .din(P_sum_buff_inp),
-    .dout(/**/),
+    .dout(P_sum_buff_out),
     .full(),
     .empty()
 ); 
@@ -140,6 +142,15 @@ design_datapath #(
     .stride_len(stride_len),
     .IF_buf_inp(IF_buf_inp),
     .filt_buf_inp(filter_buf_inp),
+
+    .IF_mux_sel(/**/),
+    .filter_mux_sel(/**/),
+
+    .reset_accumulation(/**/),
+
+    .accumulate_input_psum(accumulate_input_psum),
+    .p_sum_input(P_sum_buff_out),
+
     .module_outval(module_outval),
     .IF_buf_read(IF_buf_read),
     .filt_buf_read(filter_buf_read),

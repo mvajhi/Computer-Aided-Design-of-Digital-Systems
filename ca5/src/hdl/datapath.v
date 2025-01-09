@@ -154,9 +154,25 @@ module design_datapath #(
         .dout(IF_scratch_out)
     );
 
+    // Filter Size register
+    wire [FILT_ADDR_LEN - 1:0] filt_size;
+    Register #(
+        .SIZE(FILT_ADDR_LEN)
+    ) filt_size_reg (
+        .clk(clk),
+        .rst(rst),
+        .right_shen(1'b0),
+        .left_shen(1'b0),
+        .ser_in(1'b0),
+        .outval(filt_size),
+        .inval(filt_len),
+        .ld_en(filter_read_start),
+        .msb(/**/)
+    );
+
     // Filter Scratchpad
     wire [FILT_ADDR_LEN - 1:0] filt_raddr_mux_out, next_filt_raddr;
-    assign next_filt_raddr = filt_raddr + 1;
+    assign next_filt_raddr = filt_raddr + filt_size;
     Mux2to1 #(
         .WIDTH(FILT_ADDR_LEN)
     ) filt_raddr_mux (
