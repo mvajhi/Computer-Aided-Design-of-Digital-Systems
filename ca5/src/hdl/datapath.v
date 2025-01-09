@@ -1,6 +1,5 @@
 module design_datapath #(
     parameter P_SUM_ADDR_LEN,
-    parameter P_SUM_SCRATCH_DEPTH,
     parameter P_SUM_SCRATCH_WIDTH,
     parameter P_SUM_SCRATCH_DEPTH,
     parameter FILT_ADDR_LEN,
@@ -134,7 +133,7 @@ module design_datapath #(
         .done(done),
         .full_done(full_done),
         .stride_count_flag(stride_count_flag),
-        .stride_pos_ld(stride_pos_ld),
+        .stride_pos_ld(stride_pos_ld)
     );
 
     // IF Scratchpad
@@ -269,7 +268,7 @@ module design_datapath #(
     wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_mux_out;
     Mux2to1 #(
         .WIDTH(P_SUM_SCRATCH_WIDTH)
-    ) p_sum_mux (
+    ) p_sum_mux_a (
         .a({P_SUM_SCRATCH_WIDTH{1'b0}}),
         .b(p_sum_scratch_out),
         .sel(reset_accumulation),
