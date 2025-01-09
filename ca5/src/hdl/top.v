@@ -1,4 +1,7 @@
 module design_top #(
+    parameter P_SUM_ADDR_LEN,
+    parameter P_SUM_SCRATCH_WIDTH,
+    parameter P_SUM_SCRATCH_DEPTH,
     parameter FILT_ADDR_LEN,
     parameter IF_ADDR_LEN,
     parameter IF_SCRATCH_DEPTH,
@@ -125,6 +128,9 @@ Fifo_buffer #(
 // Datapath
 
 design_datapath #(
+    .P_SUM_ADDR_LEN(P_SUM_ADDR_LEN),
+    .P_SUM_SCRATCH_WIDTH(P_SUM_SCRATCH_WIDTH),
+    .P_SUM_SCRATCH_DEPTH(P_SUM_SCRATCH_DEPTH),
     .FILT_ADDR_LEN(FILT_ADDR_LEN),
     .IF_ADDR_LEN(IF_ADDR_LEN),
     .IF_SCRATCH_DEPTH(IF_SCRATCH_DEPTH),
