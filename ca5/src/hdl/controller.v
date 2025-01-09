@@ -9,7 +9,8 @@ module design_controller
             input wire P_sum_buff_empty, psum_empty, // TODO : psum_full
             input wire [1:0] mod,
             output reg psum_clear, psum_ren, psum_same_addr,
-            output reg reset_all,IF_read_start,filter_read_start,clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter, accumulate
+            output reg reset_all,IF_read_start,filter_read_start,
+            clear_regs,start_rd_gen,usage_stride_pos_ld, reset_Filter, accumulate
         );
 
     parameter [3:0] MOD_0 = 4'd3;
@@ -98,7 +99,7 @@ module design_controller
                 end
 
                 JUST_ADD: begin
-                    accumulate = just_add_flag && ~P_sum_buff_empty && ~psum_empty;
+                    accumulate = ~P_sum_buff_empty && psum_empty;
                     psum_ren = 1'b1;
                     psum_same_addr = 1'b0;
                 end

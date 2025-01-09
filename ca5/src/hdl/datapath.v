@@ -244,7 +244,7 @@ module design_datapath #(
 
     // Adder Register
     wire [P_SUM_SCRATCH_WIDTH - 1:0] p_sum_mux_out;
-    assign add_inp = p_sum_mux_out + mult_reg_out;
+    assign add_inp = p_sum_mux_out + accumulation_mux_out;
 
     // Output Assignment
     assign module_outval = add_inp;

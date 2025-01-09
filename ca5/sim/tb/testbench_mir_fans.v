@@ -137,23 +137,23 @@ module testbench_mir_fans();
         filter_inputs[15] = 16'b1111111111100100; IFmap_inputs[15] = 18'b001111111111010000; psum_values[15] = 16'bX;
         filter_inputs[16] = 16'b1111111111001100; IFmap_inputs[16] = 18'b011111111111000010; psum_values[16] = 16'bX;
 
-        Psum_inputs[0] = 36'd1;
-        Psum_inputs[1] = 36'd2;
-        Psum_inputs[2] = 36'bX;
-        Psum_inputs[3] = 36'bX;
-        Psum_inputs[4] = 36'bX;
-        Psum_inputs[5] = 36'bX;
-        Psum_inputs[6] = 36'bX;
-        Psum_inputs[7] = 36'bX;
-        Psum_inputs[8] = 36'bX;
-        Psum_inputs[9] = 36'bX;
-        Psum_inputs[10] = 36'bX;
-        Psum_inputs[11] = 36'bX;
-        Psum_inputs[12] = 36'bX;
-        Psum_inputs[13] = 36'bX;
-        Psum_inputs[14] = 36'bX;
-        Psum_inputs[15] = 36'bX;
-        Psum_inputs[16] = 36'bX;
+        Psum_inputs[0] = 32'd1;
+        Psum_inputs[1] = 32'd2;
+        Psum_inputs[2] = 32'bX;
+        Psum_inputs[3] = 32'bX;
+        Psum_inputs[4] = 32'bX;
+        Psum_inputs[5] = 32'bX;
+        Psum_inputs[6] = 32'bX;
+        Psum_inputs[7] = 32'bX;
+        Psum_inputs[8] = 32'bX;
+        Psum_inputs[9] = 32'bX;
+        Psum_inputs[10] = 32'bX;
+        Psum_inputs[11] = 32'bX;
+        Psum_inputs[12] = 32'bX;
+        Psum_inputs[13] = 32'bX;
+        Psum_inputs[14] = 32'bX;
+        Psum_inputs[15] = 32'bX;
+        Psum_inputs[16] = 32'bX;
 
 
         // Apply reset
@@ -175,7 +175,7 @@ module testbench_mir_fans();
                 IF_wen = 1;
             end
 
-            if (Psum_inputs[i] !== 36'dX) begin
+            if (Psum_inputs[i] !== 32'dX) begin
                 P_sum_buff_inp = Psum_inputs[i];
                 psum_buf_wen = 1;
             end
@@ -183,6 +183,7 @@ module testbench_mir_fans();
             #10;
             filter_wen = 0;
             IF_wen = 0;
+            psum_buf_wen = 0;
         end
 
         // Read outputs
