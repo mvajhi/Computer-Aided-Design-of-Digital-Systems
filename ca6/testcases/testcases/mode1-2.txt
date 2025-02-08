@@ -1,0 +1,22 @@
+//ifmaps: 2, ifmap size: 6, filter size = 5. filters lines: 1 - 5, ifmap lines: 6 - 17, output lines: 18 - 21. Overflow happens
+-72
+167
+-124
+99
+-166
+-191
+-145
+12
+-98
+190
+163
+170
+-74
+-97
+-89
+-33
+-77
+12343
+16348
+-15903
+9680
