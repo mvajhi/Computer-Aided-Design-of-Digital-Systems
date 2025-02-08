@@ -32,8 +32,8 @@ module testbench2();
     reg outbuf_ren;
     reg accumulate_input_psum;
 
-    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout;
-    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] dout_val;
+    wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] outbuf_dout;
+    reg [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH) - 1 : 0] dout_val;
     wire IF_full;
     wire IF_empty;
     wire filter_full;
@@ -42,6 +42,9 @@ module testbench2();
     wire outbuf_empty;
     reg [FILT_ADDR_LEN - 1:0] filt_len;
     reg [IF_ADDR_LEN - 1:0] stride_len;
+    reg [1:0] mod = 2'd2;
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] P_sum_buff_inp;
+    reg psum_buf_wen;
 
     // Instantiate the design_top module
     design_top #(
@@ -81,8 +84,10 @@ module testbench2();
         .outbuf_empty(outbuf_empty),
         .filt_len(filt_len),
         .stride_len(stride_len),
-        .calc_mod(2'd2),
-        .just_add_flag(accumulate_input_psum)
+        .calc_mod(mod),
+        .just_add_flag(accumulate_input_psum),
+        .P_sum_buff_inp(P_sum_buff_inp),
+        .psum_buf_wen(psum_buf_wen)
     );
 
     always @(posedge clk) begin
@@ -97,6 +102,7 @@ module testbench2();
     reg [15:0] psum_values [0:15];
     reg [FILT_SCRATCH_WIDTH - 1:0] filter_inputs [0:63];
     reg [IF_SCRATCH_WIDTH + 1:0] IFmap_inputs [0:63];
+    reg [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] Psum_inputs [0:63];
 
     initial begin
         // Initialize signals
@@ -109,27 +115,45 @@ module testbench2();
         outbuf_ren = 0;
         IF_din = 0;
         filter_din = 0;
-        filt_len = 4;    // Adjusted based on CSV
-        stride_len = 2;   // Adjusted based on CSV
+        filt_len = 3;    // Adjusted based on CSV
+        stride_len = 1;   // Adjusted based on CSV
 
         // Input data
-        filter_inputs[0] = 16'bX;                IFmap_inputs[0] = 18'b101111111111010111; psum_values[0] = 16'b1111101000101100;
-        filter_inputs[1] = 16'bX;                IFmap_inputs[1] = 18'b000000000000101001; psum_values[1] = 16'b0001000100101110;
-        filter_inputs[2] = 16'bX;                IFmap_inputs[2] = 18'b001111111111010011; psum_values[2] = 16'b0000110111111001;
-        filter_inputs[3] = 16'b1111111111010111; IFmap_inputs[3] = 18'bX;                psum_values[3] = 16'b0000111011110101;
-        filter_inputs[4] = 16'b1111111111001001; IFmap_inputs[4] = 18'b000000000000001001; psum_values[4] = 16'b0000001111100101;
-        filter_inputs[5] = 16'b0000000000011110; IFmap_inputs[5] = 18'b000000000000011100; psum_values[5] = 16'b1110110110010101;
-        filter_inputs[6] = 16'b0000000000110000; IFmap_inputs[6] = 18'bX;                psum_values[6] = 16'b0000111000010111;
-        filter_inputs[7] = 16'b1111111111011011; IFmap_inputs[7] = 18'b010000000000101110; psum_values[7] = 16'b1110011101010100;
-        filter_inputs[8] = 16'b0000000000110100; IFmap_inputs[8] = 18'b100000000000011101; psum_values[8] = 16'b1111010101011111;
-        filter_inputs[9] = 16'b0000000000001000; IFmap_inputs[9] = 18'b001111111111001000; psum_values[9] = 16'b0000000010111010;
+        filter_inputs[0] = -16'd43;              IFmap_inputs[0] = {2'b10, 16'd161}; psum_values[0] = 16'b1111101000101100;
+        filter_inputs[1] = 16'd18;               IFmap_inputs[1] = {2'b00, 16'd190}; psum_values[1] = 16'b0001000100101110;
+        filter_inputs[2] = -16'd41;              IFmap_inputs[2] = {2'b00, -16'd161}; psum_values[2] = 16'b0000110111111001;
+        filter_inputs[3] = -16'd3;               IFmap_inputs[3] = {2'b00, -16'd81};                psum_values[3] = 16'b0000111011110101;
+        filter_inputs[4] = -16'd30;              IFmap_inputs[4] = {2'b01, 16'd50}; psum_values[4] = 16'b0000001111100101;
+        filter_inputs[5] = -16'd34;              IFmap_inputs[5] = 18'b000000000000011100; psum_values[5] = 16'b1110110110010101;
+        filter_inputs[6] = 16'bX; IFmap_inputs[6] = 18'bX;                psum_values[6] = 16'b0000111000010111;
+        filter_inputs[7] = 16'bX; IFmap_inputs[7] = 18'b010000000000101110; psum_values[7] = 16'b1110011101010100;
+        filter_inputs[8] = 16'bX; IFmap_inputs[8] = 18'b100000000000011101; psum_values[8] = 16'b1111010101011111;
+        filter_inputs[9] = 16'bX; IFmap_inputs[9] = 18'b001111111111001000; psum_values[9] = 16'b0000000010111010;
         filter_inputs[10] = 16'bX;               IFmap_inputs[10] = 18'bX;                psum_values[10] = 16'b1111001011010100;
         filter_inputs[11] = 16'bX;               IFmap_inputs[11] = 18'b001111111111110110; psum_values[11] = 16'b0001100000101010;
-        filter_inputs[12] = 16'b0000000000100000; IFmap_inputs[12] = 18'b000000000000101010; psum_values[12] = 16'bX;
-        filter_inputs[13] = 16'b0000000000101100; IFmap_inputs[13] = 18'bX;                psum_values[13] = 16'bX;
-        filter_inputs[14] = 16'b0000000000110001; IFmap_inputs[14] = 18'bX;                psum_values[14] = 16'bX;
-        filter_inputs[15] = 16'b1111111111100100; IFmap_inputs[15] = 18'b001111111111010000; psum_values[15] = 16'bX;
-        filter_inputs[16] = 16'b1111111111001100; IFmap_inputs[16] = 18'b011111111111000010; psum_values[16] = 16'bX;
+        filter_inputs[12] = 16'bX; IFmap_inputs[12] = 18'b000000000000101010; psum_values[12] = 16'bX;
+        filter_inputs[13] = 16'bX; IFmap_inputs[13] = 18'bX;                psum_values[13] = 16'bX;
+        filter_inputs[14] = 16'bX; IFmap_inputs[14] = 18'bX;                psum_values[14] = 16'bX;
+        filter_inputs[15] = 16'bX; IFmap_inputs[15] = 18'b001111111111010000; psum_values[15] = 16'bX;
+        filter_inputs[16] = 16'bX; IFmap_inputs[16] = 18'b011111111111000010; psum_values[16] = 16'bX;
+
+        Psum_inputs[0] = 32'd1;
+        Psum_inputs[1] = 32'd2;
+        Psum_inputs[2] = 32'b3;
+        Psum_inputs[3] = 32'b0;
+        Psum_inputs[4] = 32'b0;
+        Psum_inputs[5] = 32'b0;
+        Psum_inputs[6] = 32'b0;
+        Psum_inputs[7] = 32'b0;
+        Psum_inputs[8] = 32'b0;
+        Psum_inputs[9] = 32'b0;
+        Psum_inputs[10] = 32'bX;
+        Psum_inputs[11] = 32'bX;
+        Psum_inputs[12] = 32'bX;
+        Psum_inputs[13] = 32'bX;
+        Psum_inputs[14] = 32'bX;
+        Psum_inputs[15] = 32'bX;
+        Psum_inputs[16] = 32'bX;
 
 
         // Apply reset
@@ -151,25 +175,37 @@ module testbench2();
                 IF_wen = 1;
             end
 
+            if (Psum_inputs[i] !== 32'dX) begin
+                P_sum_buff_inp = Psum_inputs[i];
+                psum_buf_wen = 1;
+            end
+
             #10;
             filter_wen = 0;
             IF_wen = 0;
+            psum_buf_wen = 0;
         end
 
         // Read outputs
-        for (i = 0; i < 12; i = i + 1) begin
-            // Wait until buffer is not empty
-            while (outbuf_empty) begin
-                #1; // Wait for 1 time unit and recheck
-            end
+        // for (i = 0; i < 12; i = i + 1) begin
+        //     // Wait until buffer is not empty
+        //     while (outbuf_empty) begin
+        //         #1; // Wait for 1 time unit and recheck
+        //     end
 
-            outbuf_ren = 1; // Enable read
-            #10;
-            $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
-            outbuf_ren = 0; // Disable read
-        end
+        //     outbuf_ren = 1; // Enable read
+        //     #10;
+        //     $display("Time: %0t - Outbuf: %b, Psum: %b, True: %b", $time, dout_val[15:0], psum_values[i], dout_val[15:0] == psum_values[i]);
+        //     outbuf_ren = 0; // Disable read
+        // end
         // End simulation
-        #100 $stop;
+        
+        #3000 start = 0; accumulate_input_psum = 1;
+        #10 start = 1;
+        #10 start = 0;
+
+
+        #200 $stop;
     end
 
 endmodule

@@ -6,7 +6,7 @@ exec vlib work
 vmap work work
 
 # Set testbench and paths
-set TB "testbench_mir_fans"
+set TB "testbench2_3"
 set hdl_path "../src/hdl"
 set inc_path "../src/inc"
 
@@ -46,6 +46,10 @@ add wave -hex -group {TB} sim:/$TB/*
 add wave -hex -group {top} sim:/$TB/uut/*
 add wave -hex -group -r {all} sim:/$TB/*
 add wave -hex -position end  sim:/testbench2/uut/datapath/p_sum_scratch_pad/buffer/memory
+add wave -position insertpoint sim:/testbench2_3/uut/datapath/mult_inp
+add wave -position insertpoint sim:/testbench2_3/uut/datapath/filt_scratch_out
+add wave -position insertpoint sim:/testbench2_3/uut/datapath/IF_scratch_reg_out
+add wave -position end  sim:/testbench2_3/uut/out_buffer/buffer/memory
 
 #=========================== Configure Wave Signals =============================
 configure wave -signalnamewidth 2

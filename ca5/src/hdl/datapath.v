@@ -32,6 +32,8 @@ module design_datapath #(
     input wire usage_stride_pos_ld,
     input wire reset_Filter,
     
+    input wire go_next_row,
+
     output wire [IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH - 1:0] module_outval,
     output wire IF_buf_read,
     output wire filt_buf_read,
@@ -68,6 +70,9 @@ module design_datapath #(
         .IF_buf_end_flag(IF_buf_inp[IF_SCRATCH_WIDTH]),
         .IF_buf_empty_flag(IF_buf_empty_flag),
         .full_done(full_done),
+
+        .go_next_row(go_next_row),
+
         .start_IF(start_IF),
         .end_IF(end_IF),
         .IF_buf_read(IF_buf_read),
@@ -214,7 +219,7 @@ module design_datapath #(
     );
 
     // Multiplier Register
-    assign mult_inp = filt_scratch_out * IF_scratch_reg_out;
+    assign mult_inp = $signed(filt_scratch_out) * $signed(IF_scratch_reg_out);
 
     Register #(
         .SIZE(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
