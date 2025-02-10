@@ -330,9 +330,12 @@ module DataPath_Top # (
         .rst(rst),
         .enable(1'b1),
         .count(FILTERG_co),
-        .one_hot(filter_wen)
+        .one_hot(filter_wen),
+
+        .co(co_onehot)
     );
 
     assign done_all = done[0] && done[1] && done[2];
+    assign co_ifG = IFG_co;
 
 endmodule
