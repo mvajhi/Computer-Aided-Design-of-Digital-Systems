@@ -34,7 +34,7 @@ module DataPath_Top # (
 
     // ADDR_GEN
     parameter IFG_CNT = 1,
-    parameter FILTER_CNT = 1,
+    parameter FILTER_CNT = 1
     
 
 ) (
@@ -55,7 +55,10 @@ module DataPath_Top # (
     input wire [31:0] inData,
 
     output wire [31:0] outData,
-    output wire done_all
+    output wire done_all,
+
+    output wire co_ifG,
+    output wire co_onehot
 );
     
     // SRAM
