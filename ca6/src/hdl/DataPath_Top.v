@@ -20,7 +20,18 @@ module DataPath_Top # (
     // SRAM
     parameter ADDR_WIDTH_SRAM = 8,
     parameter DATA_WIDTH_SRAM = 16,
-    parameter INIT_FILE_SRAM = ""
+    parameter INIT_FILE_SRAM = "",
+
+    // OFSET
+    parameter OFFSET_IFG = 0,
+    parameter OFFSET_RESALRG = 0,
+    parameter OFFSET_FILTER = 0,    
+
+    // ADDR_GEN
+    parameter IFG_CNT = 1,
+    parameter FILTER_CNT = 1,
+    
+
 ) (
     input wire clk,
     input wire rst,
@@ -33,6 +44,8 @@ module DataPath_Top # (
 
     input wire filt_len,
     input wire stride_len,
+
+    input wire sel_addr_SRAM,
 
     input wire [31:0] inData,
     output wire [31:0] outData
@@ -252,6 +265,41 @@ module DataPath_Top # (
     );
 
 
-    // 
+    // resalrG
+    AddressCounter #(
+        .ADDR_WIDTH(ADDR_WIDTH_SRAM),
+        .OFFSET(OFFSET_RESALRG)
+    ) resalrG (
+        .clk(clk),
+        .reset(rst),
+        .enable(~result_empty[2]),
+        .addr(write_addr_SRAM)
+    );
+
+
+    // IFG
+    wire [ADDR_WIDTH_SRAM-1:0] out_IFG;
+    AddressCounter #(
+        .ADDR_WIDTH(ADDR_WIDTH_SRAM),
+        .OFFSET(OFFSET_IFG)
+    ) IFG (
+        .clk(clk),
+        .reset(rst),
+        .enable(IFG_CNT),
+        .addr()
+    );
+
+    // FILTER
+    AddressCounter #(
+        .ADDR_WIDTH(ADDR_WIDTH_SRAM),
+        .OFFSET(OFFSET_FILTER)
+    ) FILTER (
+        .clk(clk),
+        .reset(rst),
+        .enable(FILTER_CNT),
+        .addr()
+    );
+
+    assign read_addr_SRAM = (sel_addr_SRAM) ? FILTER.addr : IFG.addr;
 
 endmodule

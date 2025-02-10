@@ -15,5 +15,4 @@ module AddressCounter #(parameter ADDR_WIDTH = 8, parameter OFFSET = 0) (
     end
     
     assign addr = counter + OFFSET;
-    
 endmodule
