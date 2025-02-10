@@ -23,7 +23,7 @@ vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_p
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/filt_buf_read.v
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/read_addr_gen.v
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/top.v
-vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/aux.v
+vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/_aux.v
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/controller.v
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/fifo_buffer.v
 vlog +acc -incr -source +define+SIM +lint=all +warn=width -pedanticerrors $hdl_path/out_buf.v

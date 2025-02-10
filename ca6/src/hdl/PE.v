@@ -1,6 +1,6 @@
 `default_nettype none
 
-module design_top #(
+module PE #(
     parameter FILT_ADDR_LEN,
     parameter IF_ADDR_LEN,
     parameter IF_SCRATCH_DEPTH,
