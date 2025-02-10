@@ -23,9 +23,14 @@ module DataPath_Top # (
     parameter INIT_FILE_SRAM = "",
 
     // OFSET
-    parameter OFFSET_IFG = 0,
     parameter OFFSET_RESALRG = 0,
+    parameter OFFSET_IFG = 0,
     parameter OFFSET_FILTER = 0,    
+
+    // FOR_CO
+    parameter FOR_CO_RESALRG = 3,
+    parameter FOR_CO_IFG = 3,
+    parameter FOR_CO_FILTER = 3,
 
     // ADDR_GEN
     parameter IFG_CNT = 1,
@@ -48,7 +53,9 @@ module DataPath_Top # (
     input wire sel_addr_SRAM,
 
     input wire [31:0] inData,
-    output wire [31:0] outData
+
+    output wire [31:0] outData,
+    output wire done_all
 );
     
     // SRAM
@@ -70,7 +77,7 @@ module DataPath_Top # (
     );
 
     
-    wire filter_wen;
+    wire [2:0] filter_wen;
 
     // PE
     wire [outbuf_par_read * (IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH + 1) - 1 : 0] outbuf_dout [2:0];
@@ -106,7 +113,7 @@ module DataPath_Top # (
 
         .IF_wen(ifmap_wen[0]),           // if_wen
         .IF_din(read_data_SRAM), // ifdata
-        .filter_wen(filter_wen),         // filt_wen
+        .filter_wen(filter_wen[0]),         // filt_wen
         .filter_din(read_data_SRAM), // filtdata
 
         .outbuf_ren(result_ren[0]),          // res_Ren
@@ -168,7 +175,7 @@ module DataPath_Top # (
 
         .IF_wen(ifmap_wen[1]),           // if_wen
         .IF_din(read_data_SRAM), // ifdata
-        .filter_wen(filter_wen),         // filt_wen
+        .filter_wen(filter_wen[1]),         // filt_wen
         .filter_din(read_data_SRAM), // filtdata
 
         .outbuf_ren(result_ren[1]),          // res_Ren
@@ -229,7 +236,7 @@ module DataPath_Top # (
 
         .IF_wen(ifmap_wen[2]),           // if_wen
         .IF_din(read_data_SRAM), // ifdata
-        .filter_wen(filter_wen),         // filt_wen
+        .filter_wen(filter_wen[2]),         // filt_wen
         .filter_din(read_data_SRAM), // filtdata
 
         .outbuf_ren(~result_empty[2]),          // res_Ren
@@ -268,7 +275,8 @@ module DataPath_Top # (
     // resalrG
     AddressCounter #(
         .ADDR_WIDTH(ADDR_WIDTH_SRAM),
-        .OFFSET(OFFSET_RESALRG)
+        .OFFSET(OFFSET_RESALRG),
+        .FOR_CO(FOR_CO_RESALRG)
     ) resalrG (
         .clk(clk),
         .reset(rst),
@@ -279,27 +287,49 @@ module DataPath_Top # (
 
     // IFG
     wire [ADDR_WIDTH_SRAM-1:0] out_IFG;
+    wire IFG_co;
     AddressCounter #(
         .ADDR_WIDTH(ADDR_WIDTH_SRAM),
-        .OFFSET(OFFSET_IFG)
+        .OFFSET(OFFSET_IFG),
+        .FOR_CO(FOR_CO_IFG)
     ) IFG (
         .clk(clk),
         .reset(rst),
         .enable(IFG_CNT),
-        .addr()
+        .addr(out_IFG),
+        .co(IFG_co)
     );
 
     // FILTER
+    wire [ADDR_WIDTH_SRAM-1:0] out_FILTERG;
+    wire FILTERG_co;
+
     AddressCounter #(
         .ADDR_WIDTH(ADDR_WIDTH_SRAM),
-        .OFFSET(OFFSET_FILTER)
-    ) FILTER (
+        .OFFSET(OFFSET_FILTER),
+        .FOR_CO(FOR_CO_FILTER)
+    ) FILTERG (
         .clk(clk),
         .reset(rst),
         .enable(FILTER_CNT),
-        .addr()
+        .addr(out_FILTER),
+        .co(FILTERG_co)
     );
 
-    assign read_addr_SRAM = (sel_addr_SRAM) ? FILTER.addr : IFG.addr;
+    assign read_addr_SRAM = (sel_addr_SRAM) ? out_IFG : out_FILTERG;
+
+
+    // OneHotCounter
+    OneHotCounter #(
+        .WIDTH(3)
+    ) onehot (
+        .clk(clk),
+        .rst(rst),
+        .enable(1'b1),
+        .count(FILTERG_co),
+        .one_hot(filter_wen)
+    );
+
+    assign done_all = done[0] && done[1] && done[2];
 
 endmodule
