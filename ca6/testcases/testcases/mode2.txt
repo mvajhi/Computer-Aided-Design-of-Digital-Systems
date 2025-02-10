@@ -1,0 +1,18 @@
+//ifmap size: 5, 2 * filter size = 3. filters lines: 1 - 6, ifmap lines: 7 - 11, output lines: 12 - 17
+-43
+3
+18
+-30
+-41
+-34
+161
+190
+-161
+-81
+50
+3098
+257
+-7747
+8154
+3415
+247

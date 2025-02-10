@@ -219,7 +219,7 @@ module design_datapath #(
     );
 
     // Multiplier Register
-    assign mult_inp = filt_scratch_out * IF_scratch_reg_out;
+    assign mult_inp = $signed(filt_scratch_out) * $signed(IF_scratch_reg_out);
 
     Register #(
         .SIZE(IF_SCRATCH_WIDTH + FILT_SCRATCH_WIDTH)
