@@ -155,6 +155,24 @@ module testbench2();
         Psum_inputs[15] = 32'bX;
         Psum_inputs[16] = 32'bX;
 
+        Psum_inputs[0] = 32'd1;
+        Psum_inputs[1] = 32'd2;
+        Psum_inputs[2] = 32'bX;
+        Psum_inputs[3] = 32'bX;
+        Psum_inputs[4] = 32'bX;
+        Psum_inputs[5] = 32'bX;
+        Psum_inputs[6] = 32'bX;
+        Psum_inputs[7] = 32'bX;
+        Psum_inputs[8] = 32'bX;
+        Psum_inputs[9] = 32'bX;
+        Psum_inputs[10] = 32'bX;
+        Psum_inputs[11] = 32'bX;
+        Psum_inputs[12] = 32'bX;
+        Psum_inputs[13] = 32'bX;
+        Psum_inputs[14] = 32'bX;
+        Psum_inputs[15] = 32'bX;
+        Psum_inputs[16] = 32'bX;
+
 
         // Apply reset
         #10 rst = 0;
